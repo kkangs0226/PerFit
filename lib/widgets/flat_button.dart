@@ -9,10 +9,13 @@ class CustomFlatButtonIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton.icon(
-      onPressed: handler,
-      icon: icon,
-      label: Text(text),
+    return SizedBox(
+      width: 70,
+      child: FlatButton.icon(
+        onPressed: handler,
+        icon: icon,
+        label: Text(text),
+      ),
     );
   }
 }
