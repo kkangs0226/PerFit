@@ -12,8 +12,16 @@ class StudentRegistrationPage extends StatefulWidget {
 }
 
 class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
-  DateTime _selectedDate;
-  var months = [
+  DateTime _dateSelected;
+  String _schoolSelected;
+  String _startDateSelected;
+  String _endDateSelected;
+  String _facultySelected;
+  String _genderSelected;
+  var _errorMessage = ['Please fill the previous field first'];
+  var _genders = ['Male', 'Female'];
+
+  var _months = [
     'Jan',
     'Feb',
     'March',
@@ -28,6 +36,65 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
     'Dec'
   ];
 
+  List<String> _schools = [
+    'NUS',
+    'NTU',
+    'SIM',
+    'SMU',
+    'SP',
+    'TP',
+    'RP',
+  ];
+
+  Map<String, List<String>> _faculties = {
+    'NUS': [
+      'Computing',
+      'FASS',
+      'Engineering',
+      'Science',
+      'Business',
+    ],
+    'NTU': [
+      'Computing',
+      'FASS',
+      'Engineering',
+      'Science',
+      'Business',
+    ],
+    'SIM': [
+      'Computing',
+      'FASS',
+      'Engineering',
+      'Science',
+      'Business',
+    ],
+    'SMU': [
+      'Computing',
+      'FASS',
+      'Engineering',
+      'Science',
+      'Business',
+    ],
+    'SP': [
+      'Computing',
+      'FASS',
+      'Engineering',
+      'Science',
+      'Business',
+    ],
+    'TP': [
+      'Computing',
+      'FASS',
+      'Engineering',
+      'Science',
+      'Business',
+    ],
+    'RP': [
+      'Computing',
+      'FASS',
+    ],
+  };
+
   void _presentDatePicker() {
     showDatePicker(
       context: context,
@@ -39,7 +106,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
         return;
       }
       setState(() {
-        _selectedDate = pickedDate;
+        _dateSelected = pickedDate;
       });
     });
     print('...');
@@ -71,10 +138,20 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'PerFit',
+          style: Theme.of(context).textTheme.headline6.copyWith(
+                fontSize: 20,
+                color: Theme.of(context).accentColor,
+              ),
+        ),
+        automaticallyImplyLeading: false,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 100),
+            SizedBox(height: 30),
             _buildTextField('Email', 100, false, false),
             SizedBox(height: 25),
             _buildTextField('Password', 150, true, false),
@@ -100,11 +177,11 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      _selectedDate == null
+                      _dateSelected == null
                           ? 'Date of birth'
-                          : DateFormat('dd/MM/yyyy').format(_selectedDate),
+                          : DateFormat('dd/MM/yyyy').format(_dateSelected),
                       style: TextStyle(
-                        color: _selectedDate == null
+                        color: _dateSelected == null
                             ? Theme.of(context).primaryColor
                             : Colors.black,
                         fontSize: 16,
@@ -123,7 +200,40 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
               ),
             ),
             SizedBox(height: 25),
-            _buildTextField('Gender', 30, false, false),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 40),
+              child: Text(
+                'Gender',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(
+                left: 40,
+                right: 270,
+              ),
+              child: DropdownButtonFormField(
+                hint: Text(
+                  'Choose',
+                ),
+                onChanged: (val) => setState(() {
+                  this._genderSelected = val;
+
+                  print(this._schoolSelected);
+                }),
+                items: _genders
+                    .map(
+                      (gender) => DropdownMenuItem(
+                        child: Text(gender),
+                        value: gender,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
             SizedBox(height: 25),
             Container(
               width: double.infinity,
@@ -143,9 +253,11 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   Container(
                     width: 80,
                     child: DropdownButtonFormField(
-                      hint: Text('Start', style: TextStyle()),
-                      onChanged: (val) => setState(() {}),
-                      items: months
+                      hint: Text('Start'),
+                      onChanged: (val) => setState(() {
+                        this._startDateSelected = val;
+                      }),
+                      items: _months
                           .map(
                             (month) => DropdownMenuItem(
                               child: Text(month),
@@ -159,9 +271,11 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   Container(
                     width: 80,
                     child: DropdownButtonFormField(
-                      hint: Text('End', style: TextStyle()),
-                      onChanged: (val) => setState(() {}),
-                      items: months
+                      hint: Text('End'),
+                      onChanged: (val) => setState(() {
+                        this._endDateSelected = val;
+                      }),
+                      items: _months
                           .map(
                             (month) => DropdownMenuItem(
                               child: Text(month),
@@ -174,6 +288,78 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 ],
               ),
             ),
+            SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 30, right: 180),
+              padding: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white,
+                border: Border.all(color: Theme.of(context).primaryColor),
+              ),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration.collapsed(hintText: ''),
+                hint: Text(
+                  'University/Polytechnic',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onChanged: (val) => setState(() {
+                  this._schoolSelected = val;
+                  this._facultySelected = null;
+                  print(this._schoolSelected);
+                }),
+                items: _schools
+                    .map(
+                      (school) => DropdownMenuItem(
+                        child: Text(school),
+                        value: school,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 30, right: 180),
+              padding: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white,
+                border: Border.all(color: Theme.of(context).primaryColor),
+              ),
+              child: DropdownButtonFormField(
+                value: _facultySelected,
+                isExpanded: true,
+                decoration: InputDecoration.collapsed(hintText: ''),
+                hint: Text(
+                  'Faculty',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onChanged: (val) => setState(() {
+                  _facultySelected = val;
+                }),
+                items: _schoolSelected != null
+                    ? _faculties[_schoolSelected]
+                        .map(
+                          (school) => DropdownMenuItem(
+                            child: Text(school),
+                            value: school,
+                          ),
+                        )
+                        .toList()
+                    : _errorMessage
+                        .map(
+                          (error) => DropdownMenuItem(
+                            child: Text(error),
+                            value: error,
+                          ),
+                        )
+                        .toList(),
+              ),
+            ),
+            SizedBox(height: 25),
           ],
         ),
       ),
