@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './student_registration_screen.dart';
+
 class LoginScreen extends StatelessWidget {
   static const routeName = '/login';
 
@@ -109,7 +111,10 @@ class LoginScreen extends StatelessWidget {
                     height: 10,
                   ),
                   _buildNavigateRegistrationButton(
-                      context, 'create student account', () {}),
+                      context, 'create student account', () {
+                    Navigator.of(context)
+                        .pushNamed(StudentRegistrationPage.routeName);
+                  }),
                   _buildNavigateRegistrationButton(
                       context, 'create employer account', () {}),
                 ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './screens/student_registration_screen.dart';
 import './screens/login_screen.dart';
 
 void main() {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       initialRoute: LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (ctx) => LoginScreen(),
+        StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
       },
     );
   }
