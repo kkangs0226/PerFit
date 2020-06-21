@@ -221,8 +221,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 ),
                 onChanged: (val) => setState(() {
                   this._genderSelected = val;
-
-                  print(this._schoolSelected);
+                  print(this._genderSelected);
                 }),
                 items: _genders
                     .map(
@@ -256,6 +255,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       hint: Text('Start'),
                       onChanged: (val) => setState(() {
                         this._startDateSelected = val;
+                        print(this._startDateSelected.toString());
                       }),
                       items: _months
                           .map(
@@ -274,6 +274,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       hint: Text('End'),
                       onChanged: (val) => setState(() {
                         this._endDateSelected = val;
+                        print(this._endDateSelected.toString());
                       }),
                       items: _months
                           .map(
