@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 import './screens/student_registration_screen.dart';
 import './screens/login_screen.dart';
+import './screens/course_job_screen.dart';
+import './screens/course_student_screen.dart';
+import './screens/favourited_students_screen.dart';
+import './screens/favourites_companies_screen.dart';
+import './screens/home_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,9 +30,14 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: LoginScreen.routeName,
+      home: HomeScreen(),
       routes: {
         LoginScreen.routeName: (ctx) => LoginScreen(),
         StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
+        CourseJobScreen.routeName: (ctx) => CourseJobScreen(),
+        CourseStudentScreen.routeName: (ctx) => CourseStudentScreen(),
+        FavouritedStudentsScreen.routeName: (ctx) => FavouritedStudentsScreen(),
+        FavouritesCompaniesScreen.routeName: (ctx) => FavouritesCompaniesScreen(),
       },
     );
   }
