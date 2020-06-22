@@ -699,6 +699,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       children: <Widget>[
                         CustomTextField(
                           context: context,
+                          labelText: 'Job title and short description',
                           marginRight: 50.0,
                           marginLeft: 0.0,
                           obscure: false,

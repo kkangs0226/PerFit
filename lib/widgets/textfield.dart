@@ -34,7 +34,9 @@ class CustomTextField extends StatelessWidget {
         keyboardType: textInputType,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(color: Theme.of(context).primaryColor),
+          labelStyle: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide(color: Theme.of(context).primaryColor),
