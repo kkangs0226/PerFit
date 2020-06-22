@@ -75,7 +75,7 @@ class LoginScreen extends StatelessWidget {
             Center(
               child: Text(
                 'PerFit!',
-                style: Theme.of(context).textTheme.headline6.copyWith(
+                style: Theme.of(context).textTheme.headline1.copyWith(
                       fontSize: 45,
                       color: Theme.of(context).accentColor,
                     ),

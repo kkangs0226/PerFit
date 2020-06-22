@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/flat_button.dart';
+import '../widgets/textfield.dart';
 
 class StudentRegistrationPage extends StatefulWidget {
   static const routeName = '/studentRegistrationPage';
@@ -18,10 +19,64 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String _endDateSelected;
   String _facultySelected;
   String _genderSelected;
-  var _errorMessage = ['Please fill the previous field first'];
-  var _genders = ['Male', 'Female'];
+  int _yearOfStudySelected;
+  String _courseSelected;
+  String _specialisationSelected;
+  String _errorMessage = 'Please fill the previous field first';
 
-  var _months = [
+  final _yearOfStudy = [1, 2, 3, 4];
+
+  final _genders = ['Male', 'Female'];
+
+  final Map<String, List<String>> _specialisations = {
+    'Information Systems': [
+      'Fintech',
+      'Digital Innovation',
+      'Ecommerce',
+      'None'
+    ],
+    'Computer Science': [
+      'AI',
+      'Machine Learning',
+      'Game development',
+      'None',
+    ],
+    'Economics': [
+      'Macro',
+      'Micro',
+      'None',
+    ],
+    'Communications and News Media': [
+      'Social Media',
+      'Newspaper',
+      'None',
+    ],
+    'Environmental Engineering': [
+      'None',
+    ],
+    'Chemical Engineering': [
+      'None',
+    ],
+    'Data Science': [
+      'None',
+    ],
+    'Mathematics': [
+      'None',
+    ],
+    'Accountancy': [
+      'None',
+    ],
+  };
+
+  final Map<String, List<String>> _courses = {
+    'Computing': ['Information Systems', 'Computer Science'],
+    'FASS': ['Economics', 'Communications and News Media'],
+    'Engineering': ['Environmental Engineering', 'Chemical Engineering'],
+    'Science': ['Data Science', 'Mathematics'],
+    'Business': ['Accountancy'],
+  };
+
+  final _months = [
     'Jan',
     'Feb',
     'March',
@@ -36,7 +91,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
     'Dec'
   ];
 
-  List<String> _schools = [
+  final _schools = [
     'NUS',
     'NTU',
     'SIM',
@@ -46,7 +101,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
     'RP',
   ];
 
-  Map<String, List<String>> _faculties = {
+  final Map<String, List<String>> _faculties = {
     'NUS': [
       'Computing',
       'FASS',
@@ -112,26 +167,18 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
     print('...');
   }
 
-  Widget _buildTextField(
-      String labelText, double paddingRight, bool obscure, bool enableText) {
+  Widget _buildDropdownBorder(Widget child) {
     return Container(
-      padding: EdgeInsets.only(left: 30, right: paddingRight),
-      child: TextFormField(
-        readOnly: enableText,
-        obscureText: obscure,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-        ),
+      width: double.infinity,
+      height: 55,
+      margin: EdgeInsets.only(left: 30, right: 180),
+      padding: EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: Colors.white,
+        border: Border.all(color: Theme.of(context).primaryColor),
       ),
+      child: child,
     );
   }
 
@@ -141,7 +188,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
       appBar: AppBar(
         title: Text(
           'PerFit',
-          style: Theme.of(context).textTheme.headline6.copyWith(
+          style: Theme.of(context).textTheme.headline1.copyWith(
                 fontSize: 20,
                 color: Theme.of(context).accentColor,
               ),
@@ -151,12 +198,47 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            SizedBox(height: 25),
+            Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: Text(
+                'Welcome to PerFit, let\'s do some registration!',
+                style: Theme.of(context).textTheme.headline2,
+              ),
+            ),
             SizedBox(height: 30),
-            _buildTextField('Email', 100, false, false),
+            CustomTextField(
+              context: context,
+              labelText: 'Email',
+              paddingRight: 100,
+              obscure: false,
+              enableText: true,
+              textInputType: TextInputType.emailAddress,
+            ),
             SizedBox(height: 25),
-            _buildTextField('Password', 150, true, false),
+            CustomTextField(
+              context: context,
+              labelText: 'Password',
+              paddingRight: 150,
+              obscure: true,
+              enableText: true,
+            ),
             SizedBox(height: 25),
-            _buildTextField('Name', 100, false, false),
+            CustomTextField(
+              context: context,
+              labelText: 'Retype password',
+              paddingRight: 150,
+              obscure: true,
+              enableText: true,
+            ),
+            SizedBox(height: 25),
+            CustomTextField(
+              context: context,
+              labelText: 'Name',
+              paddingRight: 100,
+              obscure: false,
+              enableText: true,
+            ),
             SizedBox(height: 25),
             Container(
               margin: EdgeInsets.only(
@@ -164,7 +246,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 right: 200,
               ),
               padding: EdgeInsets.only(left: 14),
-              height: 50,
+              height: 55,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
@@ -274,7 +356,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       hint: Text('End'),
                       onChanged: (val) => setState(() {
                         this._endDateSelected = val;
-                        print(this._endDateSelected.toString());
+                        print(_endDateSelected.toString());
                       }),
                       items: _months
                           .map(
@@ -290,16 +372,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
               ),
             ),
             SizedBox(height: 25),
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.only(left: 30, right: 180),
-              padding: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.white,
-                border: Border.all(color: Theme.of(context).primaryColor),
-              ),
-              child: DropdownButtonFormField(
+            _buildDropdownBorder(
+              DropdownButtonFormField(
+                value: _schoolSelected,
                 decoration: InputDecoration.collapsed(hintText: ''),
                 hint: Text(
                   'University/Polytechnic',
@@ -308,6 +383,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 onChanged: (val) => setState(() {
                   this._schoolSelected = val;
                   this._facultySelected = null;
+                  this._courseSelected = null;
+                  this._specialisationSelected = null;
+                  print(this._courseSelected);
                   print(this._schoolSelected);
                 }),
                 items: _schools
@@ -321,16 +399,8 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
               ),
             ),
             SizedBox(height: 25),
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.only(left: 30, right: 180),
-              padding: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.white,
-                border: Border.all(color: Theme.of(context).primaryColor),
-              ),
-              child: DropdownButtonFormField(
+            _buildDropdownBorder(
+              DropdownButtonFormField(
                 value: _facultySelected,
                 isExpanded: true,
                 decoration: InputDecoration.collapsed(hintText: ''),
@@ -339,26 +409,159 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
                 onChanged: (val) => setState(() {
-                  _facultySelected = val;
+                  print(_courseSelected);
+                  this._facultySelected = val;
+                  this._courseSelected = null;
+                  this._specialisationSelected = null;
+                  print(_courseSelected);
                 }),
                 items: _schoolSelected != null
                     ? _faculties[_schoolSelected]
                         .map(
-                          (school) => DropdownMenuItem(
-                            child: Text(school),
-                            value: school,
+                          (faculty) => DropdownMenuItem(
+                            child: Text(faculty),
+                            value: faculty,
                           ),
                         )
                         .toList()
-                    : _errorMessage
+                    : [
+                        DropdownMenuItem(
+                          child: Text(
+                            _errorMessage,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          value: _errorMessage,
+                        ),
+                      ],
+              ),
+            ),
+            SizedBox(height: 25),
+            _buildDropdownBorder(
+              DropdownButtonFormField(
+                value: this._courseSelected,
+                isExpanded: true,
+                decoration: InputDecoration.collapsed(hintText: ''),
+                hint: Text(
+                  'Course',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onChanged: (val) => setState(() {
+                  this._courseSelected = val;
+                  this._specialisationSelected = null;
+                  print(this._courseSelected);
+                }),
+                items: _facultySelected == null ||
+                        _facultySelected == _errorMessage
+                    ? [
+                        DropdownMenuItem(
+                          child: Text(
+                            _errorMessage,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          value: _errorMessage,
+                        ),
+                      ]
+                    : _courses[_facultySelected]
                         .map(
-                          (error) => DropdownMenuItem(
-                            child: Text(error),
-                            value: error,
+                          (course) => DropdownMenuItem(
+                            child: Text(course),
+                            value: course,
                           ),
                         )
                         .toList(),
               ),
+            ),
+            SizedBox(height: 25),
+            _buildDropdownBorder(
+              DropdownButtonFormField(
+                value: _specialisationSelected,
+                isExpanded: true,
+                decoration: InputDecoration.collapsed(hintText: ''),
+                hint: Text(
+                  'Specialisation',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onChanged: (val) => setState(() {
+                  this._specialisationSelected = val;
+                  print(this._specialisationSelected);
+                }),
+                items:
+                    _courseSelected == null || _courseSelected == _errorMessage
+                        ? [
+                            DropdownMenuItem(
+                              child: Text(
+                                _errorMessage,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              value: _errorMessage,
+                            ),
+                          ]
+                        : _specialisations[_courseSelected]
+                            .map(
+                              (specialisation) => DropdownMenuItem(
+                                child: Text(specialisation),
+                                value: specialisation,
+                              ),
+                            )
+                            .toList(),
+              ),
+            ),
+            SizedBox(height: 25),
+            _buildDropdownBorder(
+              DropdownButtonFormField(
+                value: _yearOfStudySelected,
+                decoration: InputDecoration.collapsed(hintText: ''),
+                hint: Text(
+                  'Year of study',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onChanged: (val) => setState(() {
+                  this._yearOfStudySelected = val;
+                  print(this._yearOfStudySelected);
+                }),
+                items: _yearOfStudy
+                    .map(
+                      (year) => DropdownMenuItem(
+                        child: Text('$year'),
+                        value: year,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            SizedBox(height: 25),
+            CustomTextField(
+              context: context,
+              labelText: 'List your skillsets \n(Use \",\" to separate them)',
+              paddingRight: 100,
+              obscure: false,
+              enableText: true,
+              maxLines: 5,
+              textInputType: TextInputType.text,
+            ),
+            SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 40),
+              child: Text(
+                'Past projects',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 30),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(() {});
+                  }),
             ),
             SizedBox(height: 25),
           ],

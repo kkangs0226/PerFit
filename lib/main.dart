@@ -18,10 +18,15 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.white,
         fontFamily: 'Pacifico',
         textTheme: ThemeData.light().textTheme.copyWith(
-          headline6: TextStyle(
-            fontSize: 20,
-          ),
-        ),
+              headline1: TextStyle(
+                fontSize: 20,
+              ),
+              headline2: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: LoginScreen.routeName,
