@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../widgets/flat_button.dart';
+import '../screens/successful_registration_screen.dart';
+import '../models/past_projects.dart';
+import '../widgets/flat_icon_button.dart';
 import '../widgets/textfield.dart';
+import '../models/skillsets.dart';
+import '../models/work_experience.dart';
 
 class StudentRegistrationPage extends StatefulWidget {
   static const routeName = '/studentRegistrationPage';
@@ -23,6 +27,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String _courseSelected;
   String _specialisationSelected;
   String _errorMessage = 'Please fill the previous field first';
+  List<PastProjects> _pastProjects = [];
+  List<Skillset> _skillsets = [];
+  List<WorkExperience> _workExperiences = [];
 
   final _yearOfStudy = [1, 2, 3, 4, 5];
 
@@ -42,13 +49,13 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
       'Game development',
     ],
     'Economics': [
-      'None'
-          'Macro',
+      'None',
+      'Macro',
       'Micro',
     ],
     'Communications and News Media': [
-      'None'
-          'Social Media',
+      'None',
+      'Social Media',
       'Newspaper',
     ],
     'Environmental Engineering': [
@@ -185,6 +192,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).accentColor,
       appBar: AppBar(
         title: Text(
           'PerFit',
@@ -202,7 +210,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
             Padding(
               padding: const EdgeInsets.only(left: 30),
               child: Text(
-                'Welcome to PerFit, let\'s do some registration!',
+                'Welcome to PerFit, let\'s get to know you!',
                 style: Theme.of(context).textTheme.headline2,
               ),
             ),
@@ -210,7 +218,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
             CustomTextField(
               context: context,
               labelText: 'Email',
-              paddingRight: 100,
+              marginRight: 100,
               obscure: false,
               enableText: true,
               textInputType: TextInputType.emailAddress,
@@ -219,7 +227,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
             CustomTextField(
               context: context,
               labelText: 'Password',
-              paddingRight: 150,
+              marginRight: 150,
               obscure: true,
               enableText: true,
             ),
@@ -227,7 +235,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
             CustomTextField(
               context: context,
               labelText: 'Retype password',
-              paddingRight: 150,
+              marginRight: 150,
               obscure: true,
               enableText: true,
             ),
@@ -235,7 +243,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
             CustomTextField(
               context: context,
               labelText: 'Name',
-              paddingRight: 100,
+              marginRight: 100,
               obscure: false,
               enableText: true,
             ),
@@ -276,6 +284,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       '',
                       _presentDatePicker,
                       Icon(Icons.calendar_today),
+                      70,
                     ),
                   ),
                 ],
@@ -530,14 +539,73 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
               ),
             ),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
-              labelText: 'List your skillsets \n(Use \",\" to separate them)',
-              paddingRight: 100,
-              obscure: false,
-              enableText: true,
-              maxLines: 5,
-              textInputType: TextInputType.text,
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 40),
+              child: Text(
+                'Skillsets',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              height: 70.0 * _skillsets.length,
+              margin: EdgeInsets.only(left: 30, right: 50),
+              child: ListView.builder(
+                itemCount: _skillsets.length,
+                itemBuilder: (ctx, index) => Column(
+                  children: [
+                    Stack(
+                      children: <Widget>[
+                        CustomTextField(
+                          context: context,
+                          labelText: 'Skillset ${(index + 1)}',
+                          marginRight: 50.0,
+                          marginLeft: 0.0,
+                          obscure: false,
+                          enableText: true,
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 10,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () {
+                                  _skillsets.removeAt(
+                                      index); //REMINDER: Need to use key here
+                                  print(index);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 30),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _skillsets.add(Skillset(''));
+                    });
+                  }),
             ),
             SizedBox(height: 25),
             Container(
@@ -545,6 +613,162 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
               margin: EdgeInsets.only(left: 40),
               child: Text(
                 'Past projects',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              height: 90.0 * _pastProjects.length,
+              margin: EdgeInsets.only(left: 30, right: 50),
+              child: ListView.builder(
+                itemCount: _pastProjects.length,
+                itemBuilder: (ctx, index) => Column(
+                  children: [
+                    Stack(
+                      children: <Widget>[
+                        CustomTextField(
+                          context: context,
+                          labelText: 'Project name and short description',
+                          marginRight: 50.0,
+                          marginLeft: 0.0,
+                          obscure: false,
+                          enableText: true,
+                          maxLines: 2,
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 10,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () {
+                                  _pastProjects.removeAt(
+                                      index); //REMINDER: Need to use key here
+                                  print(index);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 30),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _pastProjects.add(PastProjects(''));
+                    });
+                  }),
+            ),
+            SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 40),
+              child: Text(
+                'Work experience',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              height: 90.0 * _workExperiences.length,
+              margin: EdgeInsets.only(left: 30, right: 50),
+              child: ListView.builder(
+                itemCount: _workExperiences.length,
+                itemBuilder: (ctx, index) => Column(
+                  children: [
+                    Stack(
+                      children: <Widget>[
+                        CustomTextField(
+                          context: context,
+                          marginRight: 50.0,
+                          marginLeft: 0.0,
+                          obscure: false,
+                          enableText: true,
+                          maxLines: 2,
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 10,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () {
+                                  _workExperiences.removeAt(
+                                      index); //REMINDER: Need to use key here
+                                  print(index);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 30),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _workExperiences.add(WorkExperience(''));
+                    });
+                  }),
+            ),
+            SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 40),
+              child: Text(
+                'Short description of yourself',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16),
+              ),
+            ),
+            CustomTextField(
+              context: context,
+              marginRight: 80,
+              obscure: false,
+              enableText: true,
+              maxLines: 3,
+            ),
+            SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 40),
+              child: Text(
+                'Upload personal CV file [Optional]',
                 style: TextStyle(
                     color: Theme.of(context).primaryColor, fontSize: 16),
               ),
@@ -560,8 +784,53 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {
-                    setState(() {});
+                    setState(
+                        () {}); // Reminder: need to access user's local files
                   }),
+            ),
+            SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 40),
+              child: Text(
+                'Upload profile picture [Optional]',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 30),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(
+                        () {}); // Reminder: need to access user's local files
+                  }),
+            ),
+            SizedBox(height: 50),
+            SizedBox(
+              width: 100,
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(SuccessfulRegistration.routeName);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                color: Theme.of(context).primaryColor,
+                child: Text(
+                  'Submit',
+                  style: TextStyle(
+                      fontSize: 16, color: Theme.of(context).accentColor),
+                ),
+              ),
             ),
             SizedBox(height: 25),
           ],

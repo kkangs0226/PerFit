@@ -4,8 +4,9 @@ class CustomFlatButtonIcon extends StatelessWidget {
   final String text;
   final Function handler;
   final Icon icon;
+  final double width;
 
-  CustomFlatButtonIcon(this.text, this.handler, this.icon);
+  CustomFlatButtonIcon(this.text, this.handler, this.icon, this.width);
 
   @override
   Widget build(BuildContext context) {

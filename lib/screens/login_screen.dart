@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './employer_registration_screen.dart';
 import './student_registration_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -116,7 +117,10 @@ class LoginScreen extends StatelessWidget {
                         .pushNamed(StudentRegistrationPage.routeName);
                   }),
                   _buildNavigateRegistrationButton(
-                      context, 'create employer account', () {}),
+                      context, 'create employer account', () {
+                    Navigator.of(context)
+                        .pushNamed(EmployerRegistrationPage.routeName);
+                  }),
                 ],
               ),
             )

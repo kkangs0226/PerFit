@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import './screens/student_registration_screen.dart';
 import './screens/login_screen.dart';
+import './screens/successful_registration_screen.dart';
+import './screens/employer_registration_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
       routes: {
         LoginScreen.routeName: (ctx) => LoginScreen(),
         StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
+        EmployerRegistrationPage.routeName: (ctx) => EmployerRegistrationPage(),
+        SuccessfulRegistration.routeName: (ctx) => SuccessfulRegistration(),
       },
     );
   }

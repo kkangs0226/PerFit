@@ -4,17 +4,19 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     Key key,
     @required this.context,
-    @required this.labelText,
-    @required this.paddingRight,
+    @required this.marginRight,
     @required this.obscure,
     @required this.enableText,
+    this.marginLeft = 30,
+    this.labelText = '',
     this.textInputType = TextInputType.text,
     this.maxLines = 1,
   }) : super(key: key);
 
   final BuildContext context;
   final String labelText;
-  final double paddingRight;
+  final double marginRight;
+  final double marginLeft;
   final bool obscure;
   final bool enableText;
   final TextInputType textInputType;
@@ -23,7 +25,8 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 30, right: paddingRight),
+      // color: Colors.blue,
+      margin: EdgeInsets.only(left: marginLeft, right: marginRight),
       child: TextFormField(
         readOnly: !enableText,
         obscureText: obscure,
