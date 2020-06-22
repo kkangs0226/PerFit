@@ -24,32 +24,32 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String _specialisationSelected;
   String _errorMessage = 'Please fill the previous field first';
 
-  final _yearOfStudy = [1, 2, 3, 4];
+  final _yearOfStudy = [1, 2, 3, 4, 5];
 
   final _genders = ['Male', 'Female'];
 
   final Map<String, List<String>> _specialisations = {
     'Information Systems': [
+      'None',
       'Fintech',
       'Digital Innovation',
       'Ecommerce',
-      'None'
     ],
     'Computer Science': [
+      'None',
       'AI',
       'Machine Learning',
       'Game development',
-      'None',
     ],
     'Economics': [
-      'Macro',
+      'None'
+          'Macro',
       'Micro',
-      'None',
     ],
     'Communications and News Media': [
-      'Social Media',
+      'None'
+          'Social Media',
       'Newspaper',
-      'None',
     ],
     'Environmental Engineering': [
       'None',
