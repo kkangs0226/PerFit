@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './employer_registration_screen.dart';
 import './student_registration_screen.dart';
+import './forgot_password_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/login';
@@ -56,7 +57,11 @@ class LoginScreen extends StatelessWidget {
     return FlatButton(
       child: Text(
         accountType,
-        style: TextStyle(decoration: TextDecoration.underline),
+        style: TextStyle(
+          decoration: TextDecoration.underline,
+          fontWeight: FontWeight.bold,
+          fontSize: 15,
+        ),
       ),
       textColor: Theme.of(context).accentColor,
       onPressed: function,
@@ -71,7 +76,7 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 100,
+              height: 90,
             ),
             Center(
               child: Text(
@@ -86,7 +91,23 @@ class LoginScreen extends StatelessWidget {
             _buildLoginField('email', false, context),
             SizedBox(height: 15),
             _buildLoginField('password', true, context),
-            SizedBox(height: 50),
+            SizedBox(
+              height: 25,
+              child: FlatButton(
+                child: Text(
+                  'Forgot password?',
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(ForgotPasswordPage.routeName);
+                },
+              ),
+            ),
+            SizedBox(height: 30),
             Center(
               child: Column(
                 children: <Widget>[

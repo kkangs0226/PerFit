@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import './screens/forgot_password_screen.dart';
 import './screens/student_registration_screen.dart';
 import './screens/login_screen.dart';
 import './screens/successful_registration_screen.dart';
 import './screens/employer_registration_screen.dart';
+import './screens/add_job_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,6 +40,8 @@ class MyApp extends StatelessWidget {
         StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
         EmployerRegistrationPage.routeName: (ctx) => EmployerRegistrationPage(),
         SuccessfulRegistration.routeName: (ctx) => SuccessfulRegistration(),
+        ForgotPasswordPage.routeName: (ctx) => ForgotPasswordPage(),
+        AddJobPage.routeName: (ctx) => AddJobPage(),
       },
     );
   }
