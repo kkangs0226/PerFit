@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../models/jobs_for_interns.dart';
-import '../widgets/dropdown_border.dart';
-import '../widgets/textfield.dart';
-import '../widgets/textfield_header.dart';
+import '../../models/jobs_for_interns.dart';
+import '../../widgets/dropdown_border.dart';
+import '../../widgets/textfield_header.dart';
 import './add_job_screen.dart';
-import '../models/past_projects.dart';
-import '../screens/successful_registration_screen.dart';
+import '../../models/past_projects.dart';
+import './successful_registration_screen.dart';
+import '../../widgets/dynamic_field.dart';
+import '../../dummy_data.dart';
 
 class EmployerRegistrationPage extends StatefulWidget {
   static const routeName = '/employerRegistationPage';
@@ -17,29 +18,66 @@ class EmployerRegistrationPage extends StatefulWidget {
 }
 
 class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
+  String _email;
+  String _password;
+  String _retypePassword;
+  String _name;
+  String _companyName;
+  String _companyAddress;
+  String _companyRegistrationNumber;
+  int _officeNumber;
+  int _personalNumber;
+  String _aboutCompany;
+  String _internsGain;
   String _industrySelected;
   bool _toShowPersonalNumber = false;
   List<JobForInterns> _jobForInterns = [];
   List<PastProjects> _pastProjects = [];
 
-  List<String> _industries = [
-    'Technology',
-    'News Media',
-    'Education',
-    'Human Resource',
-    'Advertising',
-    'Communications',
-    'Construction',
-    'Entertainment',
-    'Fashion',
-    'Finance',
-    'Hospitality',
-    'Infrastructure',
-    'Manufacturing',
-    'Music',
-    'Retail',
-    'Service',
-  ];
+  Widget _buildTextField({
+    @required marginRight,
+    @required obscure,
+    @required enableText,
+    @required function,
+    marginLeft = 30.0,
+    labelText = '',
+    textInputType = TextInputType.text,
+    maxLines = 1,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(left: marginLeft, right: marginRight),
+      child: TextFormField(
+        readOnly: !enableText,
+        obscureText: obscure,
+        maxLines: maxLines,
+        keyboardType: textInputType,
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          ),
+        ),
+        onChanged: function,
+      ),
+    );
+  }
+
+  void _deleteField(List list, String id) {
+    setState(() {
+      list.removeWhere((item) => item.id == id);
+      for (int i = 0; i < list.length; i++) {
+        print(list[i].id);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,91 +105,117 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
               ),
             ),
             SizedBox(height: 30),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _email = val;
+                print(_email);
+              },
               labelText: 'Email',
-              marginRight: 100,
+              marginRight: 100.0,
               obscure: false,
               enableText: true,
               textInputType: TextInputType.emailAddress,
             ),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _password = val;
+                print(_password);
+              },
               labelText: 'Password',
-              marginRight: 150,
+              marginRight: 150.0,
               obscure: true,
               enableText: true,
             ),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _retypePassword = val;
+                print(_retypePassword);
+              },
               labelText: 'Retype password',
-              marginRight: 150,
+              marginRight: 150.0,
               obscure: true,
               enableText: true,
             ),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _name = val;
+                print(_name);
+              },
               labelText: 'Your name',
-              marginRight: 100,
+              marginRight: 100.0,
               obscure: false,
               enableText: true,
             ),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _companyName = val;
+                print(_companyName);
+              },
               labelText: 'Company name',
-              marginRight: 100,
+              marginRight: 100.0,
               obscure: false,
               enableText: true,
             ),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _companyAddress = val;
+                print(_companyAddress);
+              },
               labelText: 'Company address',
-              marginRight: 100,
+              marginRight: 100.0,
               obscure: false,
               enableText: true,
               maxLines: 3,
             ),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _companyRegistrationNumber = val;
+                print(_companyRegistrationNumber);
+              },
               labelText: 'Company registration number',
-              marginRight: 100,
+              marginRight: 100.0,
               obscure: false,
               enableText: true,
             ),
             SizedBox(height: 25),
             DropdownBorder(
                 context: context,
-                child: DropdownButtonFormField(
-                  value: _industrySelected,
-                  decoration: InputDecoration.collapsed(hintText: ''),
-                  hint: Text(
-                    'Industry',
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    value: _industrySelected,
+                    hint: Text(
+                      'Industry',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    onChanged: (val) => setState(() {
+                      this._industrySelected = val;
+                      print(this._industrySelected);
+                    }),
+                    items: DummyData()
+                        .industries
+                        .map(
+                          (year) => DropdownMenuItem(
+                            child: Text('$year'),
+                            value: year,
+                          ),
+                        )
+                        .toList(),
                   ),
-                  onChanged: (val) => setState(() {
-                    this._industries = val;
-                    print(this._industrySelected);
-                  }),
-                  items: _industries
-                      .map(
-                        (year) => DropdownMenuItem(
-                          child: Text('$year'),
-                          value: year,
-                        ),
-                      )
-                      .toList(),
                 )),
             SizedBox(height: 25),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _officeNumber = val;
+                print(_officeNumber);
+              },
               labelText: 'Office number',
-              marginRight: 180,
+              marginRight: 180.0,
               obscure: false,
               enableText: true,
               textInputType: TextInputType.number,
@@ -160,10 +224,13 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
             Stack(
               children: [
                 Container(
-                  child: CustomTextField(
-                    context: context,
+                  child: _buildTextField(
+                    function: (val) {
+                      _personalNumber = val;
+                      print(_personalNumber);
+                    },
                     labelText: 'Personal number',
-                    marginRight: 180,
+                    marginRight: 180.0,
                     obscure: false,
                     enableText: true,
                     textInputType: TextInputType.number,
@@ -199,10 +266,13 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
             SizedBox(height: 25),
             TextFieldHeader(context: context, header: 'About company'),
             SizedBox(height: 10),
-            CustomTextField(
-              context: context,
+            _buildTextField(
+              function: (val) {
+                _aboutCompany = val;
+                print(_aboutCompany);
+              },
               labelText: '',
-              marginRight: 100,
+              marginRight: 100.0,
               obscure: false,
               enableText: true,
               maxLines: 5,
@@ -213,9 +283,12 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                 header:
                     'What can interns hope to gain from \njoining your company?'),
             SizedBox(height: 10),
-            CustomTextField(
-              context: context,
-              marginRight: 100,
+            _buildTextField(
+              function: (val) {
+                _internsGain = val;
+                print(_internsGain);
+              },
+              marginRight: 100.0,
               obscure: false,
               enableText: true,
               maxLines: 5,
@@ -225,51 +298,26 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
             SizedBox(height: 10),
             Container(
               height: 70.0 * _jobForInterns.length,
-              margin: EdgeInsets.only(left: 30, right: 50),
-              child: ListView.builder(
-                itemCount: _jobForInterns.length,
-                itemBuilder: (ctx, index) => Column(
-                  children: [
-                    Stack(
-                      children: <Widget>[
-                        CustomTextField(
-                          context: context,
-                          labelText: _jobForInterns[index].jobTitle,
-                          marginRight: 50.0,
-                          marginLeft: 0.0,
-                          obscure: false,
-                          enableText: true,
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 10,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(
-                                () {
-                                  _jobForInterns.removeAt(
-                                      index); //REMINDER: Need to use key here
-                                  print(index);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+              margin: const EdgeInsets.only(left: 30, right: 50),
+              child: ListView(
+                children: _jobForInterns
+                    .map(
+                      (job) => DynamicField(
+                        item: job,
+                        key: ValueKey(job.id),
+                        deleteField: _deleteField,
+                        labelText: '',
+                        list: _jobForInterns,
+                        id: job.id,
+                      ),
+                    )
+                    .toList(),
               ),
             ),
             Container(
               width: double.infinity,
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(left: 30),
+              margin: const EdgeInsets.only(left: 30),
               child: IconButton(
                 icon: Icon(
                   Icons.add_circle_outline,
@@ -293,51 +341,26 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
             SizedBox(height: 10),
             Container(
               height: 70.0 * _pastProjects.length,
-              margin: EdgeInsets.only(left: 30, right: 50),
-              child: ListView.builder(
-                itemCount: _pastProjects.length,
-                itemBuilder: (ctx, index) => Column(
-                  children: [
-                    Stack(
-                      children: <Widget>[
-                        CustomTextField(
-                          context: context,
-                          labelText: 'Project name and short description',
-                          marginRight: 50.0,
-                          marginLeft: 0.0,
-                          obscure: false,
-                          enableText: true,
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 10,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(
-                                () {
-                                  _pastProjects.removeAt(
-                                      index); //REMINDER: Need to use key here
-                                  print(index);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+              margin: const EdgeInsets.only(left: 30, right: 50),
+              child: ListView(
+                children: _pastProjects
+                    .map(
+                      (pastProject) => DynamicField(
+                        item: pastProject,
+                        key: ValueKey(pastProject.id),
+                        deleteField: _deleteField,
+                        labelText: 'Project name and short description',
+                        list: _pastProjects,
+                        id: pastProject.id,
+                      ),
+                    )
+                    .toList(),
               ),
             ),
             Container(
               width: double.infinity,
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(left: 30),
+              margin: const EdgeInsets.only(left: 30),
               child: IconButton(
                 icon: Icon(
                   Icons.add_circle_outline,
@@ -347,7 +370,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                   setState(
                     () {
                       _pastProjects.add(
-                        PastProjects(''),
+                        PastProjects('', DateTime.now().toString()),
                       );
                     },
                   );
@@ -363,7 +386,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
             Container(
               width: double.infinity,
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(left: 30),
+              margin: const EdgeInsets.only(left: 30),
               child: IconButton(
                 icon: Icon(
                   Icons.add_circle_outline,

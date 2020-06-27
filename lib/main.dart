@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import './screens/forgot_password_screen.dart';
-import './screens/student_registration_screen.dart';
+import './screens/registration/student_registration_screen.dart';
 import './screens/login_screen.dart';
-import './screens/successful_registration_screen.dart';
-import './screens/employer_registration_screen.dart';
-import './screens/add_job_screen.dart';
+import './screens/registration/successful_registration_screen.dart';
+import './screens/registration/employer_registration_screen.dart';
+import './screens/registration/add_job_screen.dart';
 
 void main() {
   runApp(MyApp());

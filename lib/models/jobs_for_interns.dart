@@ -10,6 +10,7 @@ class JobForInterns {
   final bool fullTime;
   final bool partTime;
   final double salary;
+  final String id;
 
   JobForInterns({
     @required this.jobTitle,
@@ -18,6 +19,7 @@ class JobForInterns {
     @required this.fullTime,
     @required this.partTime,
     @required this.salary,
+    @required this.id,
     this.startMonth,
     this.endMonth,
     this.jobRequirements,
