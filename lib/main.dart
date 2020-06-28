@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import './screens/forgot_password_screen.dart';
 import './screens/registration/student_registration_screen.dart';
 import './screens/login_screen.dart';
-import './screens/course_job_screen.dart';
-import './screens/course_student_screen.dart';
-import './screens/favourited_students_screen.dart';
-import './screens/favourites_companies_screen.dart';
-import './screens/home_screen.dart';
+import 'screens/home/home_bar/course_job_screen.dart';
+import 'screens/home/home_bar/course_student_screen.dart';
+import 'screens/home/favourites_bar/favourited_students_screen.dart';
+import 'screens/home/favourites_bar/favourites_companies_screen.dart';
+import 'screens/home/tabs_screen.dart';
 import './screens/registration/successful_registration_screen.dart';
 import './screens/registration/employer_registration_screen.dart';
 import './screens/registration/add_job_screen.dart';
+import './screens/company_student_screens/company_details_screen.dart';
+import './screens/home/home_bar/new_companies_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -39,10 +41,9 @@ class MyApp extends StatelessWidget {
             ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: LoginScreen.routeName,
-      home: HomeScreen(),
+      initialRoute: '/',
       routes: {
-        HomeScreen.routeName: (ctx) => HomeScreen(),
+        '/': (ctx) => TabsScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
         StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
         CourseJobScreen.routeName: (ctx) => CourseJobScreen(),
@@ -54,6 +55,8 @@ class MyApp extends StatelessWidget {
         SuccessfulRegistration.routeName: (ctx) => SuccessfulRegistration(),
         ForgotPasswordPage.routeName: (ctx) => ForgotPasswordPage(),
         AddJobPage.routeName: (ctx) => AddJobPage(),
+        NewCompaniesScreen.routeName: (ctx) => NewCompaniesScreen(),
+        CompanyDetailsScreen.routeName: (ctx) => CompanyDetailsScreen(),
       },
     );
   }
