@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 
-import './registration/employer_registration_screen.dart';
-import './registration/student_registration_screen.dart';
+import './registration/employer_registration/employer_registration_screen.dart';
+import './registration/student_registration/student_registration_screen.dart';
 import './forgot_password_screen.dart';
+import '../../services/auth.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
 
-  Widget _buildLoginField(String hintText, bool obscure, BuildContext context) {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  String _email;
+  String _password;
+
+  Widget _buildLoginField(
+      {String hintText,
+      bool obscure,
+      BuildContext context,
+      Function validator,
+      Function function}) {
     return Container(
-      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 70.0),
       child: TextFormField(
         obscureText: obscure,
@@ -28,6 +43,8 @@ class LoginScreen extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
+        validator: validator,
+        onChanged: function,
       ),
     );
   }
@@ -76,7 +93,7 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 90,
+              height: 60,
             ),
             Center(
               child: Text(
@@ -88,9 +105,66 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 25),
-            _buildLoginField('email', false, context),
-            SizedBox(height: 15),
-            _buildLoginField('password', true, context),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _buildLoginField(
+                    hintText: 'email',
+                    context: context,
+                    obscure: false,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return 'Please enter a valid email';
+                      } else {
+                        return null;
+                      }
+                    },
+                    function: (val) {
+                      setState(() {
+                        _email = val;
+                        print(_email);
+                      });
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  Stack(
+                    children: [
+                      _buildLoginField(
+                        hintText: 'password',
+                        context: context,
+                        obscure: true,
+                        validator: (val) {
+                          if (val.length < 6) {
+                            return 'Please enter a valid password';
+                          } else {
+                            return null;
+                          }
+                        },
+                        function: (val) {
+                          setState(() {
+                            _password = val;
+                            print(_password);
+                          });
+                        },
+                      ),
+                      Positioned(
+                        right: 70,
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_forward),
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              print('success');
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               height: 25,
               child: FlatButton(

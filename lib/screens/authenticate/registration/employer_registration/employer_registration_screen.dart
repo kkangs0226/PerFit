@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../models/jobs_for_interns.dart';
-import '../../widgets/dropdown_border.dart';
-import '../../widgets/textfield_header.dart';
+import '../../../../models/jobs_for_interns.dart';
+import '../../../../widgets/dropdown_border.dart';
+import '../../../../widgets/textfield_header.dart';
 import './add_job_screen.dart';
-import '../../models/past_projects.dart';
-import './successful_registration_screen.dart';
-import '../../widgets/dynamic_field.dart';
-import '../../dummy_data.dart';
+import '../../../../models/past_projects.dart';
+import '../successful_registration_screen.dart';
+import '../../../../widgets/dynamic_field.dart';
+import '../../../../dummy_data.dart';
 
 class EmployerRegistrationPage extends StatefulWidget {
   static const routeName = '/employerRegistationPage';
@@ -306,7 +306,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                         item: job,
                         key: ValueKey(job.id),
                         deleteField: _deleteField,
-                        labelText: '',
+                        labelText: job.jobTitle,
                         list: _jobForInterns,
                         id: job.id,
                       ),

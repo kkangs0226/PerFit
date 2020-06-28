@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:perfit_app/widgets/textfield_header.dart';
 
-import '../../models/jobs_for_interns.dart';
-import '../../widgets/dropdown_border.dart';
+import '../../../../models/jobs_for_interns.dart';
+import '../../../../widgets/dropdown_border.dart';
 
 class AddJobPage extends StatefulWidget {
   static const routeName = '/addJobPage';
