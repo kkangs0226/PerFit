@@ -4,6 +4,7 @@ import './registration/employer_registration/employer_registration_screen.dart';
 import './registration/student_registration/student_registration_screen.dart';
 import './forgot_password_screen.dart';
 import '../../services/auth.dart';
+import '../home/tabs_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -195,9 +196,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: Theme.of(context).accentColor),
                   ),
                   SizedBox(height: 15),
-                  _buildNavigationHomepageButton(context, 'Student', () {}),
+                  _buildNavigationHomepageButton(
+                    context,
+                    'Student',
+                    () {
+                      Navigator.of(context).pushNamed(TabsScreen.routeName);
+                    },
+                  ),
                   SizedBox(height: 15),
-                  _buildNavigationHomepageButton(context, 'Employer', () {}),
+                  _buildNavigationHomepageButton(context, 'Employer', () {
+                    Navigator.of(context).pushNamed(TabsScreen.routeName);
+                  }),
                   SizedBox(height: 25),
                   Text(
                     'or',

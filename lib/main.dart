@@ -17,6 +17,7 @@ import 'screens/home/favourites_bar/favourites_companies_screen.dart';
 import 'screens/home/tabs_screen.dart';
 import './screens/company_student_screens/company_details_screen.dart';
 import './screens/home/home_bar/new_companies_screen.dart';
+import './screens/home/tabs_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: Wrapper.routeName,
         routes: {
-          '/': (ctx) => TabsScreen(),
+          TabsScreen.routeName: (ctx) => TabsScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
           EmployerRegistrationPage.routeName: (ctx) =>
