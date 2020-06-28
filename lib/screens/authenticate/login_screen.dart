@@ -5,6 +5,7 @@ import './registration/student_registration/student_registration_screen.dart';
 import './forgot_password_screen.dart';
 import '../../services/auth.dart';
 import '../home/tabs_screen.dart';
+import '../../widgets/loading.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -18,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
+  bool _failedLogin = false;
+  bool _loading = false;
 
   Widget _buildLoginField(
       {String hintText,
@@ -43,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hintStyle: TextStyle(
             color: Theme.of(context).primaryColorDark,
           ),
+          errorStyle: TextStyle(color: Colors.red[900]),
         ),
         validator: validator,
         onChanged: function,
@@ -88,149 +92,169 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColorDark,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 60,
-            ),
-            Center(
-              child: Text(
-                'PerFit!',
-                style: Theme.of(context).textTheme.headline1.copyWith(
-                      fontSize: 45,
-                      color: Theme.of(context).accentColor,
-                    ),
-              ),
-            ),
-            SizedBox(height: 25),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  _buildLoginField(
-                    hintText: 'email',
-                    context: context,
-                    obscure: false,
-                    validator: (val) {
-                      if (val.isEmpty) {
-                        return 'Please enter a valid email';
-                      } else {
-                        return null;
-                      }
-                    },
-                    function: (val) {
-                      setState(() {
-                        _email = val;
-                        print(_email);
-                      });
-                    },
-                  ),
-                  SizedBox(height: 15),
-                  Stack(
-                    children: [
-                      _buildLoginField(
-                        hintText: 'password',
-                        context: context,
-                        obscure: true,
-                        validator: (val) {
-                          if (val.length < 6) {
-                            return 'Please enter a valid password';
-                          } else {
-                            return null;
-                          }
-                        },
-                        function: (val) {
-                          setState(() {
-                            _password = val;
-                            print(_password);
-                          });
-                        },
-                      ),
-                      Positioned(
-                        right: 70,
-                        child: IconButton(
-                          icon: Icon(Icons.arrow_forward),
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              print('success');
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              child: FlatButton(
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(ForgotPasswordPage.routeName);
-                },
-              ),
-            ),
-            SizedBox(height: 30),
-            Center(
+    return _loading
+        ? Loading()
+        : Scaffold(
+            backgroundColor: Theme.of(context).primaryColorDark,
+            body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Text(
-                    'Not a member yet?',
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Let\'s explore',
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
-                  SizedBox(height: 15),
-                  _buildNavigationHomepageButton(
-                    context,
-                    'Student',
-                    () {
-                      Navigator.of(context).pushNamed(TabsScreen.routeName);
-                    },
-                  ),
-                  SizedBox(height: 15),
-                  _buildNavigationHomepageButton(context, 'Employer', () {
-                    Navigator.of(context).pushNamed(TabsScreen.routeName);
-                  }),
-                  SizedBox(height: 25),
-                  Text(
-                    'or',
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
                   SizedBox(
-                    height: 10,
+                    height: 60,
                   ),
-                  _buildNavigateRegistrationButton(
-                      context, 'create student account', () {
-                    Navigator.of(context)
-                        .pushNamed(StudentRegistrationPage.routeName);
-                  }),
-                  _buildNavigateRegistrationButton(
-                      context, 'create employer account', () {
-                    Navigator.of(context)
-                        .pushNamed(EmployerRegistrationPage.routeName);
-                  }),
+                  Center(
+                    child: Text(
+                      'PerFit!',
+                      style: Theme.of(context).textTheme.headline1.copyWith(
+                            fontSize: 45,
+                            color: Theme.of(context).accentColor,
+                          ),
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        _buildLoginField(
+                          hintText: 'email',
+                          context: context,
+                          obscure: false,
+                          function: (val) {
+                            setState(() {
+                              _email = val;
+                              print(_email);
+                            });
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        Stack(
+                          children: [
+                            _buildLoginField(
+                              hintText: 'password',
+                              context: context,
+                              obscure: true,
+                              function: (val) {
+                                setState(() {
+                                  _password = val;
+                                  print(_password);
+                                });
+                              },
+                            ),
+                            Positioned(
+                              right: 70,
+                              child: IconButton(
+                                icon: Icon(Icons.arrow_forward),
+                                color: Theme.of(context).primaryColor,
+                                onPressed: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    setState(() {
+                                      _loading = true;
+                                    });
+                                    dynamic result =
+                                        await _auth.signInWithEmailAndPassword(
+                                            _email, _password);
+                                    print('signing in');
+                                    if (result == null) {
+                                      setState(() {
+                                        _loading = false;
+                                        _failedLogin = true;
+                                      });
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (_failedLogin)
+                    SizedBox(
+                      height: 30,
+                      child: Center(
+                        child: Text(
+                          'Please check your credentials',
+                          style: TextStyle(color: Colors.red[900]),
+                        ),
+                      ),
+                    ),
+                  SizedBox(
+                    height: 25,
+                    child: FlatButton(
+                      child: Text(
+                        'Forgot password?',
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(ForgotPasswordPage.routeName);
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Center(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Not a member yet?',
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Let\'s explore',
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                        SizedBox(height: 15),
+                        _buildNavigationHomepageButton(
+                          context,
+                          'Student',
+                          () {
+                            Navigator.of(context)
+                                .pushNamed(TabsScreen.routeName);
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        _buildNavigationHomepageButton(context, 'Employer',
+                            () async {
+                          // setState(() {
+                          //   _loading = true;
+                          // });
+                          await Navigator.of(context)
+                              .pushNamed(TabsScreen.routeName);
+                        }),
+                        SizedBox(height: 25),
+                        Text(
+                          'or',
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _buildNavigateRegistrationButton(
+                            context, 'create student account', () {
+                          Navigator.of(context)
+                              .pushNamed(StudentRegistrationPage.routeName);
+                        }),
+                        _buildNavigateRegistrationButton(
+                            context, 'create employer account', () {
+                          Navigator.of(context)
+                              .pushNamed(EmployerRegistrationPage.routeName);
+                        }),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

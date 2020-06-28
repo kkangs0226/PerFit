@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import './screens/authenticate/forgot_password_screen.dart';
 import './screens/authenticate/registration/student_registration/student_registration_screen.dart';
 import './screens/authenticate/login_screen.dart';
-import './screens/authenticate/registration/successful_registration_screen.dart';
 import './screens/authenticate/registration/employer_registration/employer_registration_screen.dart';
 import './screens/authenticate/registration/employer_registration/add_job_screen.dart';
 import './services/auth.dart';
@@ -55,7 +54,6 @@ class MyApp extends StatelessWidget {
           StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
           EmployerRegistrationPage.routeName: (ctx) =>
               EmployerRegistrationPage(),
-          SuccessfulRegistration.routeName: (ctx) => SuccessfulRegistration(),
           ForgotPasswordPage.routeName: (ctx) => ForgotPasswordPage(),
           AddJobPage.routeName: (ctx) => AddJobPage(),
           Wrapper.routeName: (ctx) => Wrapper(),

@@ -3,6 +3,7 @@ import 'package:perfit_app/widgets/textfield_header.dart';
 
 import '../../../../models/jobs_for_interns.dart';
 import '../../../../widgets/dropdown_border.dart';
+import '../../../../widgets/dynamic_field.dart';
 
 class AddJobPage extends StatefulWidget {
   static const routeName = '/addJobPage';
@@ -17,9 +18,11 @@ class _AddJobPageState extends State<AddJobPage> {
   String _jobSpecialisationSelected;
   String _durationSelected;
   double _salary;
+  String _end;
+  String _start;
   bool _fullTime = false;
-  bool _partTime = true;
-  List<String> _skillsets = [];
+  bool _partTime = false;
+  List<Map<String, String>> _skillsets = [];
 
   List<String> _jobSpecialisations = [
     'Computer Science',
@@ -35,6 +38,20 @@ class _AddJobPageState extends State<AddJobPage> {
     '9 months',
     '12 months',
   ];
+
+  void _updateValueOfListFields(String val, int index, List list, String key) {
+    list[index][key] = val;
+    print(val);
+  }
+
+  void _deleteField(List list, String id) {
+    setState(() {
+      list.removeWhere((item) => item['id'] == id);
+      for (int i = 0; i < list.length; i++) {
+        print(list[i]['id']);
+      }
+    });
+  }
 
   Widget _buildTextField({
     @required marginRight,
@@ -178,47 +195,28 @@ class _AddJobPageState extends State<AddJobPage> {
             Container(
               height: 70.0 * _skillsets.length,
               margin: EdgeInsets.only(left: 30, right: 50),
-              child: ListView.builder(
-                itemCount: _skillsets.length,
-                itemBuilder: (ctx, index) => Column(
-                  children: [
-                    Stack(
-                      children: <Widget>[
-                        _buildTextField(
-                          function: (val) {
-                            _skillsets[index] = val;
-                            print(_skillsets[index]);
-                          },
-                          labelText: 'Skillset ${(index + 1)}',
-                          marginRight: 50.0,
-                          marginLeft: 0.0,
-                          obscure: false,
-                          enableText: true,
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 10,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(
-                                () {
-                                  _skillsets.removeAt(
-                                      index); //REMINDER: Need to use key here
-                                  print(index);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+              child: ListView(
+                children: _skillsets
+                    .map(
+                      (skillset) => DynamicField(
+                        function: (val) {
+                          _updateValueOfListFields(
+                            val,
+                            _skillsets.indexOf(skillset),
+                            _skillsets,
+                            'skillset',
+                          );
+                        },
+                        item: skillset,
+                        key: ValueKey(skillset['id']),
+                        deleteField: _deleteField,
+                        labelText:
+                            'Skillset ${_skillsets.indexOf(skillset) + 1}',
+                        list: _skillsets,
+                        id: skillset['id'],
+                      ),
+                    )
+                    .toList(),
               ),
             ),
             Container(
@@ -231,13 +229,12 @@ class _AddJobPageState extends State<AddJobPage> {
                   color: Theme.of(context).primaryColor,
                 ),
                 onPressed: () {
-                  setState(
-                    () {
-                      _skillsets.add(
-                        '',
-                      );
-                    },
-                  );
+                  setState(() {
+                    _skillsets
+                        .add({'skillset': '', 'id': DateTime.now().toString()});
+                    print(DateTime.now().toString());
+                    print(_skillsets.length);
+                  });
                 },
               ),
             ),
@@ -319,8 +316,12 @@ class _AddJobPageState extends State<AddJobPage> {
                   Navigator.pop(
                     context,
                     JobForInterns(
+                      jobRequirements: _skillsets,
+                      endMonth: _end,
+                      startMonth: _start,
                       id: id,
                       jobTitle: _jobTitle,
+                      duration: _durationSelected,
                       jobSpecialisation: _jobSpecialisationSelected,
                       jobDescription: _jobDesciption,
                       fullTime: _fullTime,

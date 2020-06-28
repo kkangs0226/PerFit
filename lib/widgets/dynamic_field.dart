@@ -6,10 +6,12 @@ class DynamicField extends StatefulWidget {
   final List list;
   final String id;
   final dynamic item;
+  final Function function;
 
   const DynamicField({
+    @required this.function,
     @required this.item,
-    @required Key key,
+    Key key,
     @required this.labelText,
     @required this.id,
     @required this.deleteField,
@@ -69,9 +71,7 @@ class _DynamicFieldState extends State<DynamicField> {
               marginLeft: 0.0,
               obscure: false,
               enableText: true,
-              function: (val) {
-                this.widget.item.update(val);
-              },
+              function: widget.function,
             ),
             Positioned(
               right: 0,

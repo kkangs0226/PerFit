@@ -5,6 +5,7 @@ import './filter_bar/filter_screen.dart';
 import './forum_bar/forum_screen.dart';
 import './home_bar/home_screen.dart';
 import './profile_bar/user_profile_screen.dart';
+import '../../services/auth.dart';
 
 class TabsScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
@@ -15,6 +16,7 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   List<Map<String, Object>> _pages;
   var _selectedPageIndex = 0;
+  final AuthService _auth = AuthService();
 
   @override
   void initState() {
@@ -40,6 +42,15 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     final PreferredSizeWidget appBar = AppBar(
       title: Text(_pages[_selectedPageIndex]['title']),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.undo),
+          onPressed: () async {
+            await _auth.signOut();
+            print('Signing out...');
+          },
+        ),
+      ],
     );
     return Scaffold(
       appBar: appBar,
