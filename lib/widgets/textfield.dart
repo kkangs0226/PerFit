@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
     @required this.marginRight,
     @required this.obscure,
     @required this.enableText,
+    @required this.function,
     this.marginLeft = 30,
     this.labelText = '',
     this.textInputType = TextInputType.text,
@@ -20,7 +21,8 @@ class CustomTextField extends StatelessWidget {
   final bool obscure;
   final bool enableText;
   final TextInputType textInputType;
-  final maxLines;
+  final int maxLines;
+  final Function function;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,7 @@ class CustomTextField extends StatelessWidget {
             borderSide: BorderSide(color: Theme.of(context).primaryColor),
           ),
         ),
+        
       ),
     );
   }
