@@ -53,7 +53,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
         return;
       }
       setState(() {
-        _dateSelected = DateFormat('dd/MM/yyyy/').format(pickedDate);
+        _dateSelected = DateFormat('dd/MM/yyyy').format(pickedDate);
         print(_dateSelected);
       });
     });
@@ -88,6 +88,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
         maxLines: maxLines,
         keyboardType: textInputType,
         decoration: InputDecoration(
+          errorStyle: TextStyle(color: Colors.red),
           labelText: labelText,
           labelStyle: TextStyle(
             color: Theme.of(context).primaryColor,
@@ -207,15 +208,20 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         }),
                     SizedBox(height: 25),
                     _buildTextField(
-                      function: (val) {
-                        _name = val;
-                        print(_name);
-                      },
-                      labelText: 'Name',
-                      marginRight: 100.0,
-                      obscure: false,
-                      enableText: true,
-                    ),
+                        function: (val) {
+                          _name = val;
+                          print(_name);
+                        },
+                        labelText: 'Name',
+                        marginRight: 100.0,
+                        obscure: false,
+                        enableText: true,
+                        validator: (val) {
+                          if (val.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        }),
                     SizedBox(height: 25),
                     Container(
                       margin: const EdgeInsets.only(
@@ -223,7 +229,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         right: 200,
                       ),
                       padding: const EdgeInsets.only(left: 14),
-                      height: 55,
+                      height: 60,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -260,7 +266,11 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    TextFieldHeader(context: context, header: 'Gender'),
+                    TextFieldHeader(
+                      context: context,
+                      header: 'Gender',
+                      error: false,
+                    ),
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(
@@ -268,6 +278,15 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         right: 270,
                       ),
                       child: DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          errorStyle: TextStyle(color: Colors.red),
+                        ),
+                        validator: (val) {
+                          if (val == null) {
+                            return 'Please choose\na gender';
+                          }
+                          return null;
+                        },
                         hint: Text(
                           'Choose',
                         ),
@@ -287,7 +306,11 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    TextFieldHeader(context: context, header: 'Availability'),
+                    TextFieldHeader(
+                      context: context,
+                      header: 'Availability',
+                      error: false,
+                    ),
                     SizedBox(height: 10),
                     Container(
                       width: double.infinity,
@@ -337,179 +360,317 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    DropdownBorder(
-                        context: context,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _schoolSelected,
-                            hint: Text(
-                              'University/Polytechnic',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            onChanged: (val) => setState(() {
-                              this._schoolSelected = val;
-                              this._facultySelected = null;
-                              this._courseSelected = null;
-                              this._specialisationSelected = null;
-                              print(this._courseSelected);
-                              print(this._schoolSelected);
-                            }),
-                            items: DummyData()
-                                .schools
+                    Container(
+                      margin: EdgeInsets.only(left: 30, right: 150),
+                      child: DropdownButtonFormField(
+                        value: _schoolSelected,
+                        validator: (val) {
+                          if (val == null) {
+                            return 'Please select one';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        hint: Text(
+                          'University/Polytechnic',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onChanged: (val) => setState(() {
+                          this._schoolSelected = val;
+                          this._facultySelected = null;
+                          this._courseSelected = null;
+                          this._specialisationSelected = null;
+                          print(this._schoolSelected);
+                        }),
+                        items: DummyData()
+                            .schools
+                            .map(
+                              (school) => DropdownMenuItem(
+                                child: Text(school),
+                                value: school,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    SizedBox(height: 25),
+                    Container(
+                      margin: EdgeInsets.only(left: 30, right: 150),
+                      child: DropdownButtonFormField(
+                        validator: (val) {
+                          if (val == null) {
+                            return 'Please select one';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        value: _facultySelected,
+                        isExpanded: true,
+                        hint: Text(
+                          'Faculty',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onChanged: (val) => setState(() {
+                          this._facultySelected = val;
+                          this._courseSelected = null;
+                          this._specialisationSelected = null;
+                          print(_facultySelected);
+                        }),
+                        items: _schoolSelected != null
+                            ? DummyData()
+                                .faculties[_schoolSelected]
                                 .map(
-                                  (school) => DropdownMenuItem(
-                                    child: Text(school),
-                                    value: school,
+                                  (faculty) => DropdownMenuItem(
+                                    child: Text(faculty),
+                                    value: faculty,
+                                  ),
+                                )
+                                .toList()
+                            : [
+                                DropdownMenuItem(
+                                  child: Text(
+                                    _errorMessage,
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  value: _errorMessage,
+                                ),
+                              ],
+                      ),
+                    ),
+                    SizedBox(height: 25),
+                    Container(
+                      margin: EdgeInsets.only(left: 30, right: 150),
+                      child: DropdownButtonFormField(
+                        validator: (val) {
+                          if (val == null) {
+                            return 'Please select one';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        value: this._courseSelected,
+                        isExpanded: true,
+                        hint: Text(
+                          'Course',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onChanged: (val) => setState(() {
+                          this._courseSelected = val;
+                          this._specialisationSelected = null;
+                          print(this._courseSelected);
+                        }),
+                        items: _facultySelected == null ||
+                                _facultySelected == _errorMessage
+                            ? [
+                                DropdownMenuItem(
+                                  child: Text(
+                                    _errorMessage,
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  value: _errorMessage,
+                                ),
+                              ]
+                            : DummyData()
+                                .courses[_facultySelected]
+                                .map(
+                                  (course) => DropdownMenuItem(
+                                    child: Text(course),
+                                    value: course,
                                   ),
                                 )
                                 .toList(),
-                          ),
-                        )),
+                      ),
+                    ),
                     SizedBox(height: 25),
-                    DropdownBorder(
-                        context: context,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _facultySelected,
-                            isExpanded: true,
-                            hint: Text(
-                              'Faculty',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            onChanged: (val) => setState(() {
-                              this._facultySelected = val;
-                              this._courseSelected = null;
-                              this._specialisationSelected = null;
-                              print(_facultySelected);
-                            }),
-                            items: _schoolSelected != null
-                                ? DummyData()
-                                    .faculties[_schoolSelected]
-                                    .map(
-                                      (faculty) => DropdownMenuItem(
-                                        child: Text(faculty),
-                                        value: faculty,
-                                      ),
-                                    )
-                                    .toList()
-                                : [
-                                    DropdownMenuItem(
-                                      child: Text(
-                                        _errorMessage,
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                      value: _errorMessage,
-                                    ),
-                                  ],
+                    Container(
+                      margin: EdgeInsets.only(left: 30, right: 150),
+                      child: DropdownButtonFormField(
+                        validator: (val) {
+                          if (val == null) {
+                            return 'Please select one';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
                           ),
-                        )),
-                    SizedBox(height: 25),
-                    DropdownBorder(
-                        context: context,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: this._courseSelected,
-                            isExpanded: true,
-                            hint: Text(
-                              'Course',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            onChanged: (val) => setState(() {
-                              this._courseSelected = val;
-                              this._specialisationSelected = null;
-                              print(this._courseSelected);
-                            }),
-                            items: _facultySelected == null ||
-                                    _facultySelected == _errorMessage
-                                ? [
-                                    DropdownMenuItem(
-                                      child: Text(
-                                        _errorMessage,
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                      value: _errorMessage,
-                                    ),
-                                  ]
-                                : DummyData()
-                                    .courses[_facultySelected]
-                                    .map(
-                                      (course) => DropdownMenuItem(
-                                        child: Text(course),
-                                        value: course,
-                                      ),
-                                    )
-                                    .toList(),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
                           ),
-                        )),
-                    SizedBox(height: 25),
-                    DropdownBorder(
-                        context: context,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _specialisationSelected,
-                            isExpanded: true,
-                            hint: Text(
-                              'Specialisation',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            onChanged: (val) => setState(() {
-                              this._specialisationSelected = val;
-                              print(this._specialisationSelected);
-                            }),
-                            items: _courseSelected == null ||
-                                    _courseSelected == _errorMessage
-                                ? [
-                                    DropdownMenuItem(
-                                      child: Text(
-                                        _errorMessage,
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                      value: _errorMessage,
-                                    ),
-                                  ]
-                                : DummyData()
-                                    .specialisations[_courseSelected]
-                                    .map(
-                                      (specialisation) => DropdownMenuItem(
-                                        child: Text(specialisation),
-                                        value: specialisation,
-                                      ),
-                                    )
-                                    .toList(),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
                           ),
-                        )),
-                    SizedBox(height: 25),
-                    DropdownBorder(
-                        context: context,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _yearOfStudySelected,
-                            hint: Text(
-                              'Year of study',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            onChanged: (val) => setState(() {
-                              this._yearOfStudySelected = val;
-                              print(this._yearOfStudySelected);
-                            }),
-                            items: DummyData()
-                                .yearOfStudy
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        value: _specialisationSelected,
+                        isExpanded: true,
+                        hint: Text(
+                          'Specialisation',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onChanged: (val) => setState(() {
+                          this._specialisationSelected = val;
+                          print(this._specialisationSelected);
+                        }),
+                        items: _courseSelected == null ||
+                                _courseSelected == _errorMessage
+                            ? [
+                                DropdownMenuItem(
+                                  child: Text(
+                                    _errorMessage,
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  value: _errorMessage,
+                                ),
+                              ]
+                            : DummyData()
+                                .specialisations[_courseSelected]
                                 .map(
-                                  (year) => DropdownMenuItem(
-                                    child: Text('$year'),
-                                    value: year,
+                                  (specialisation) => DropdownMenuItem(
+                                    child: Text(specialisation),
+                                    value: specialisation,
                                   ),
                                 )
                                 .toList(),
-                          ),
-                        )),
+                      ),
+                    ),
                     SizedBox(height: 25),
-                    TextFieldHeader(context: context, header: 'Skillsets'),
+                    Container(
+                      margin: EdgeInsets.only(left: 30, right: 150),
+                      child: DropdownButtonFormField(
+                        validator: (val) {
+                          if (val == null) {
+                            return 'Please select one';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        value: _yearOfStudySelected,
+                        hint: Text(
+                          'Year of study',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onChanged: (val) => setState(() {
+                          this._yearOfStudySelected = val;
+                          print(this._yearOfStudySelected);
+                        }),
+                        items: DummyData()
+                            .yearOfStudy
+                            .map(
+                              (year) => DropdownMenuItem(
+                                child: Text('$year'),
+                                value: year,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    SizedBox(height: 25),
+                    TextFieldHeader(
+                      context: context,
+                      header: 'Skillsets',
+                      error: false,
+                    ),
                     SizedBox(height: 10),
                     Container(
                       height: 70.0 * _skillsets.length,
@@ -559,7 +720,11 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           }),
                     ),
                     SizedBox(height: 25),
-                    TextFieldHeader(context: context, header: 'Past projects'),
+                    TextFieldHeader(
+                      context: context,
+                      header: 'Past projects',
+                      error: false,
+                    ),
                     SizedBox(height: 10),
                     Container(
                       height: 70.0 * _pastProjects.length,
@@ -608,7 +773,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                        context: context, header: 'Work experience'),
+                        error: false,
+                        context: context,
+                        header: 'Work experience'),
                     SizedBox(height: 10),
                     Container(
                       height: 70.0 * _workExperiences.length,
@@ -656,9 +823,16 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
+                        error: false,
                         context: context,
                         header: 'Short description of yourself'),
                     _buildTextField(
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Please fill a short description';
+                        }
+                        return null;
+                      },
                       function: (val) {
                         _shortDescription = val;
                         print(_shortDescription);
@@ -670,6 +844,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
+                        error: false,
                         context: context,
                         header: 'Upload personal CV file [Optional]'),
                     SizedBox(height: 10),
@@ -689,6 +864,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
+                        error: false,
                         context: context,
                         header: 'Upload profile picture [Optional]'),
                     SizedBox(height: 10),
@@ -722,7 +898,6 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       child: FlatButton(
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            print(_skillsets[0]['skillset']);
                             setState(() {
                               _loading = true;
                             });

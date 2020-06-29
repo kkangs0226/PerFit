@@ -229,31 +229,58 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       enableText: true,
                     ),
                     SizedBox(height: 25),
-                    DropdownBorder(
-                        context: context,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _industrySelected,
-                            hint: Text(
-                              'Industry',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            onChanged: (val) => setState(() {
-                              this._industrySelected = val;
-                              print(this._industrySelected);
-                            }),
-                            items: DummyData()
-                                .industries
-                                .map(
-                                  (year) => DropdownMenuItem(
-                                    child: Text('$year'),
-                                    value: year,
-                                  ),
-                                )
-                                .toList(),
+                    Container(
+                      margin: EdgeInsets.only(left: 30, right: 150),
+                      child: DropdownButtonFormField(
+                        value: _industrySelected,
+                        validator: (val) {
+                          if (val == null) {
+                            return 'Please select one';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
                           ),
-                        )),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        hint: Text(
+                          'Industry',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onChanged: (val) => setState(() {
+                          this._industrySelected = val;
+                          print(this._industrySelected);
+                        }),
+                        items: DummyData()
+                            .industries
+                            .map(
+                              (year) => DropdownMenuItem(
+                                child: Text('$year'),
+                                value: year,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
                     SizedBox(height: 25),
                     _buildTextField(
                       function: (val) {
@@ -311,7 +338,11 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       ],
                     ),
                     SizedBox(height: 25),
-                    TextFieldHeader(context: context, header: 'Company logo'),
+                    TextFieldHeader(
+                      context: context,
+                      header: 'Company logo',
+                      error: false,
+                    ),
                     SizedBox(height: 10),
                     Container(
                       width: double.infinity,
@@ -330,7 +361,11 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    TextFieldHeader(context: context, header: 'About company'),
+                    TextFieldHeader(
+                      context: context,
+                      header: 'About company',
+                      error: false,
+                    ),
                     SizedBox(height: 10),
                     _buildTextField(
                       function: (val) {
@@ -345,6 +380,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
+                        error: false,
                         context: context,
                         header:
                             'What can interns hope to gain from \njoining your company?'),
@@ -361,7 +397,10 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                        context: context, header: 'Jobs for interns'),
+                      error: false,
+                      context: context,
+                      header: 'Jobs for interns',
+                    ),
                     SizedBox(height: 10),
                     Container(
                       height: 70.0 * _jobForInterns.length,
@@ -421,7 +460,11 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    TextFieldHeader(context: context, header: 'Past projects'),
+                    TextFieldHeader(
+                      context: context,
+                      header: 'Past projects',
+                      error: false,
+                    ),
                     SizedBox(height: 10),
                     Container(
                       height: 70.0 * _pastProjects.length,
@@ -472,6 +515,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
+                      error: false,
                       context: context,
                       header:
                           'Upload personal profile\n[docx,pdf,ppt][Optional]',

@@ -173,6 +173,7 @@ class _AddJobPageState extends State<AddJobPage> {
             ),
             SizedBox(height: 25),
             TextFieldHeader(
+              error: false,
               context: context,
               header: 'Job description',
             ),
@@ -188,6 +189,7 @@ class _AddJobPageState extends State<AddJobPage> {
             ),
             SizedBox(height: 25),
             TextFieldHeader(
+              error:false,
               context: context,
               header: 'Job skillset requirements',
             ),
@@ -240,6 +242,7 @@ class _AddJobPageState extends State<AddJobPage> {
             ),
             SizedBox(height: 25),
             TextFieldHeader(
+              error: false,
               context: context,
               header: 'Working schedule',
             ),
