@@ -39,25 +39,48 @@ class OfferWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(3),
-                height: 75,
-                width: 75,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  //color: Theme.of(context).primaryColorDark,
-                  color: Colors.black54,
-                ),
-                child: ClipOval(
-                  child: Image.asset(
-                    listStudents[index].profileURL,
-                    height: 75,
-                    width: 75,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              isStudent
+                  ? Container(
+                      margin: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(3),
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: Theme.of(context).primaryColorDark,
+                        color: Colors.black54,
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(13),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Image.asset(
+                          listCompanies[index].logoURL,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      margin: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(3),
+                      height: 75,
+                      width: 75,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: Theme.of(context).primaryColorDark,
+                        color: Colors.black54,
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          listStudents[index].profileURL,
+                          height: 75,
+                          width: 75,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
               Container(
                   height: 140,
                   width: 200,

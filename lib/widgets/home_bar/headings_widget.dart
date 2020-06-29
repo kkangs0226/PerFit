@@ -70,7 +70,7 @@ class Heading extends StatelessWidget {
       },
       'NEW': {
         'description':
-            'This is the number of students who have joined PerFit in the last month!',
+            'This is the number of students who have joined PerFit in the last week!',
         'icon': Icon(
           Icons.new_releases,
           color: Color.fromRGBO(153, 69, 237, 1.0),

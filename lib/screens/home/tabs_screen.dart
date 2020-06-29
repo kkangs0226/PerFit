@@ -56,12 +56,13 @@ class _TabsScreenState extends State<TabsScreen> {
             SizedBox(
               width: 15,
             ),
-            Container(
+            /*Container(
               height: 18,
               width: 220,
               alignment: Alignment.center,
               color: Colors.white,
             ),
+            */
           ],
         ),
       ),
