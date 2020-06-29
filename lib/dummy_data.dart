@@ -1,3 +1,6 @@
+import 'package:perfit_app/models/company.dart';
+import './models/student.dart';
+
 class DummyData {
   final List<int> _yearOfStudy = [1, 2, 3, 4, 5];
 
@@ -175,4 +178,112 @@ class DummyData {
   List<String> get industries {
     return _industries;
   }
+
+  static List<Company> DUMMY_COMPANIES = const [
+    Company(
+      id: 'abc',
+      name: 'ABC Company',
+      logoURL: 'assets/images/company_abc.png',
+      founderName: 'Anthony Poh',
+      industry: 'Architecture',
+      joinedDate: '26/02/2020',
+      jobList: null,
+    ),
+    Company(
+        id: 'apple',
+        name: 'Appol',
+        logoURL: 'assets/images/company_apple.png',
+        founderName: 'Xavier Poh',
+        industry: 'Marketing',
+        joinedDate: '21/02/2020',
+        jobList: null),
+    Company(
+        id: 'melon',
+        name: 'BeatAPPOL',
+        logoURL: 'assets/images/company_melon.png',
+        founderName: 'Anthony Xavier',
+        industry: 'Banking & Finance',
+        joinedDate: '02/02/2020',
+        location: '290 Orchard Rd, Singapore 238859',
+        tempJob: {
+          'title': 'Software Engineer Intern',
+          'duration': 'July 2020 - December 2020',
+          'skillsets': 'Flutter, Javascript, Java, Web Development'
+        },
+        jobList: null),
+    Company(
+        id: 'pear',
+        name: 'PearWithMe',
+        logoURL: 'assets/images/company_pear.png',
+        founderName: 'Kang Su Min',
+        industry: 'Civil Engineering',
+        joinedDate: '26/02/2020',
+        jobList: null),
+    Company(
+        id: 'orange',
+        name: 'AnnoyingOrange',
+        logoURL: 'assets/images/company_orange.png',
+        founderName: 'Ming Kang',
+        industry: 'Fishing',
+        joinedDate: '26/02/2020',
+        jobList: null),
+  ];
+
+  static List<Student> DUMMY_STUDENTS = [
+    Student(
+      name: 'Popo Pipo',
+      school: 'NUS',
+      course: 'COM',
+      year: 1,
+      age: 22,
+      profileURL: 'assets/images/student_1.jpg',
+      personalStatement:
+          'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
+      resumeURL: 'assets/images/resume.jpg',
+    ),
+    Student(
+      name: 'Thomas Train',
+      school: 'NTU',
+      course: 'BIZ',
+      year: 2,
+      age: 7,
+      profileURL: 'assets/images/student_2.jpeg',
+      resumeURL: 'assets/images/resume.jpg',
+      personalStatement:
+          'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
+    ),
+    Student(
+      name: 'Kang Su Min',
+      school: 'NUS',
+      course: 'SCI',
+      year: 3,
+      age: 13,
+      profileURL: 'assets/images/student_3.jpg',
+      resumeURL: 'assets/images/resume.jpg',
+      personalStatement:
+          'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
+    ),
+    Student(
+      name: 'Homer Simpson',
+      school: 'NUS',
+      course: 'ARTS',
+      year: 1,
+      age: 45,
+      profileURL: 'assets/images/student_4.jpg',
+      resumeURL: 'assets/images/resume.jpg',
+      personalStatement:
+          'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as.',
+    ),
+    Student(
+      name: 'Donald Duck',
+      school: 'Ngee Ann Polytechnic',
+      course: 'BIZ',
+      year: 4,
+      age: 100,
+      profileURL: 'assets/images/student_5.jpeg',
+      resumeURL: 'assets/images/resume.jpg',
+      personalStatement:
+          'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
+    ),
+  ];
 }

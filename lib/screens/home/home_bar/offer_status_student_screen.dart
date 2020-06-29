@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-//import '../widgets/job_widget.dart';
-
-class CourseJobScreen extends StatelessWidget {
-  static const routeName = '/course_job_screen';
+class OfferStatusStudentScreen extends StatelessWidget {
+  static const routeName = './offer_status_student_screen';
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +15,7 @@ class CourseJobScreen extends StatelessWidget {
         )
       */
       body: Center(
-        child: Text('course'),
+        child: Text('offer'),
       ),
     );
   }

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:perfit_app/dummy_data.dart';
 
-class CompanyDetailsScreen extends StatelessWidget {
-  static const routeName = './company_details_screen';
+class StudentDetailsScreen extends StatelessWidget {
+  static const routeName = './student_details_screen';
 
-  final Function toggleFavourites;
-  final Function isFavourite;
+  final Function toggleOffer;
+  final Function gaveOffer;
 
-  CompanyDetailsScreen(this.toggleFavourites, this.isFavourite);
+  StudentDetailsScreen(this.toggleOffer, this.gaveOffer);
 
   @override
   Widget build(BuildContext context) {
-    final companyId = ModalRoute.of(context).settings.arguments as String;
-    final selectedCompany = DummyData.DUMMY_COMPANIES
-        .firstWhere((company) => company.id == companyId);
+    final studentName = ModalRoute.of(context).settings.arguments as String;
+    final selectedStudent = DummyData.DUMMY_STUDENTS
+        .firstWhere((student) => student.name == studentName);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Company Profile'),
+        title: Text('Student Profile'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -39,10 +39,10 @@ class CompanyDetailsScreen extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(5),
                     child: Image.asset(
-                      selectedCompany.logoURL,
+                      selectedStudent.profileURL,
                       height: 120,
                       width: 90,
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -58,7 +58,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             top: 10.0, bottom: 3, right: 10, left: 10),
                         child: Text(
-                          'Name: ${selectedCompany.name}',
+                          'Name: ${selectedStudent.name}',
                           //'Name: djklajfdklfjlasdjfklasjf',
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
@@ -75,7 +75,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              'Industry: ${selectedCompany.industry}',
+                              'Course: ${selectedStudent.course}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -87,7 +87,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                             Container(
                               //width: mediaQueryData.size.width * 0.4,
                               child: Text(
-                                'Founder Name: ${selectedCompany.founderName}',
+                                'School: ${selectedStudent.school}',
                                 //'Name: djklajfdklfjlasdjfklasjf',
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
@@ -99,7 +99,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Location: ${selectedCompany.location}',
+                              'Age: ${selectedStudent.age}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -109,7 +109,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Date Joined: ${selectedCompany.joinedDate}',
+                              'Year: ${selectedStudent.year}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -135,7 +135,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'Jobs Available',
+                      'Personal Statement',
                       style: TextStyle(
                         fontSize: 15,
                         fontFamily: 'Montserrat',
@@ -146,32 +146,43 @@ class CompanyDetailsScreen extends StatelessWidget {
                   Card(
                     elevation: 10,
                     child: Container(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(8.0),
                       width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Title: ${selectedCompany.tempJob['title']}',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 8,
-                            width: 2,
-                          ),
-                          Text(
-                            'Duration: ${selectedCompany.tempJob['duration']}',
-                          ),
-                          Text(
-                            'Skillset: ${selectedCompany.tempJob['skillsets']}',
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                      child: Text(
+                        '${selectedStudent.personalStatement}',
+                        //'Name: djklajfdklfjlasdjfklasjf',
+                        softWrap: true,
+                        textAlign: TextAlign.left,
                       ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(15),
+              width: mediaQueryData.size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      'CV',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10),
+                    child: Card(
+                        elevation: 10,
+                        child: Image.asset(selectedStudent.resumeURL)),
+                  )
                 ],
               ),
             ),
@@ -181,10 +192,9 @@ class CompanyDetailsScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           child: Icon(
-            isFavourite(companyId) ? Icons.favorite : Icons.favorite_border,
-            color: Color.fromRGBO(250, 20, 131, 1.0),
-          ),
-          onPressed: () => toggleFavourites(companyId)),
+              gaveOffer(studentName) ? Icons.check : Icons.accessibility_new,
+              color: Theme.of(context).accentColor),
+          onPressed: () => toggleOffer(studentName)),
     );
   }
 }

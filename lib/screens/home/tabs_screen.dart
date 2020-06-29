@@ -38,11 +38,54 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final PreferredSizeWidget appBar = AppBar(
-      title: Text(_pages[_selectedPageIndex]['title']),
+    final PreferredSizeWidget mainAppBar = AppBar(
+      title: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        alignment: Alignment.center,
+        child: Row(
+          children: <Widget>[
+            Text(
+              _pages[_selectedPageIndex]['title'],
+              style: TextStyle(
+                fontSize: 25,
+                fontFamily: 'Pacifico',
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Container(
+              height: 18,
+              width: 220,
+              alignment: Alignment.center,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
     );
+
+    final PreferredSizeWidget appBar = AppBar(
+      title: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          _pages[_selectedPageIndex]['title'],
+          style: TextStyle(
+            fontSize: 25,
+            fontFamily: 'Monsterrat',
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+      ),
+    );
+
     return Scaffold(
-      appBar: appBar,
+      appBar: _selectedPageIndex == 0 ? mainAppBar : appBar,
       body: _pages[_selectedPageIndex]['page'],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,

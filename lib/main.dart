@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:perfit_app/dummy_data.dart';
+import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
+import 'package:perfit_app/screens/home/home_bar/offer_status_employer_screen.dart';
+import 'package:perfit_app/screens/home/home_bar/offer_status_student_screen.dart';
 import 'package:provider/provider.dart';
 
 import './screens/authenticate/forgot_password_screen.dart';
@@ -18,13 +22,62 @@ import 'screens/home/tabs_screen.dart';
 import './screens/company_student_screens/company_details_screen.dart';
 import './screens/home/home_bar/new_companies_screen.dart';
 import './screens/home/tabs_screen.dart';
+import './models/student.dart';
+import './models/company.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  List<Student> _offerListOfStudents = [];
+  List<Company> _favouritedCompanies = [];
+
+  bool _gaveOffer(String studentName) {
+    return _offerListOfStudents.any((student) => student.name == studentName);
+  }
+
+  void _toggleOffer(String studentName) {
+    final existingIndex = _offerListOfStudents
+        .indexWhere((student) => student.name == studentName);
+    if (existingIndex < 0) {
+      setState(() {
+        _offerListOfStudents.add(DummyData.DUMMY_STUDENTS
+            .firstWhere((student) => student.name == studentName));
+      });
+    } else {
+      setState(() {
+        _offerListOfStudents.removeAt(existingIndex);
+      });
+    }
+  }
+
+  bool _isFavourite(String companyId) {
+    return _favouritedCompanies.any((company) => company.id == companyId);
+  }
+
+  void _toggleFavourites(String companyId) {
+    final existingIndex =
+        _favouritedCompanies.indexWhere((company) => company.id == companyId);
+    if (existingIndex < 0) {
+      setState(() {
+        _favouritedCompanies.add(DummyData.DUMMY_COMPANIES
+            .firstWhere((company) => company.id == companyId));
+      });
+    } else {
+      setState(() {
+        _favouritedCompanies.removeAt(existingIndex);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider<User>.value(
@@ -37,6 +90,10 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.white,
           fontFamily: 'Pacifico',
           textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
                 headline1: TextStyle(
                   fontSize: 20,
                 ),
@@ -45,6 +102,10 @@ class MyApp extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
                 ),
+                bodyText1: TextStyle(
+                  fontFamily: 'Monserrat',
+                ),
+                bodyText2: TextStyle(fontFamily: 'Monserrat'),
               ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
@@ -66,7 +127,14 @@ class MyApp extends StatelessWidget {
           FavouritesCompaniesScreen.routeName: (ctx) =>
               FavouritesCompaniesScreen(),
           NewCompaniesScreen.routeName: (ctx) => NewCompaniesScreen(),
-          CompanyDetailsScreen.routeName: (ctx) => CompanyDetailsScreen(),
+          CompanyDetailsScreen.routeName: (ctx) =>
+              CompanyDetailsScreen(_toggleFavourites, _isFavourite),
+          OfferStatusEmployerScreen.routeName: (ctx) =>
+              OfferStatusEmployerScreen(),
+          OfferStatusStudentScreen.routeName: (ctx) =>
+              OfferStatusEmployerScreen(),
+          StudentDetailsScreen.routeName: (ctx) =>
+              StudentDetailsScreen(_toggleOffer, _gaveOffer),
         },
       ),
     );
