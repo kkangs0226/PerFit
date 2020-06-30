@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../widgets/flat_icon_button.dart';
-import '../../../../widgets/dropdown_border.dart';
 import '../../../../widgets/textfield_header.dart';
 import '../../../../widgets/dynamic_field.dart';
 import '../../../../dummy_data.dart';
 import '../../../../services/auth.dart';
 import '../../../../widgets/loading.dart';
+import '../../../../widgets/textfield.dart';
+import '../../../../widgets/dropdownfield.dart';
 
 class StudentRegistrationPage extends StatefulWidget {
   static const routeName = '/studentRegistrationPage';
@@ -36,6 +37,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   bool _registrationError = false;
   bool _failedRegistration = false;
   bool _loading = false;
+  bool _emptySkillsetField = false;
+  bool _emptyPastProjField = false;
+  bool _emptyWorkExpField = false;
   List<Map<String, String>> _pastProjects = [];
   List<Map<String, String>> _skillsets = [];
   List<Map<String, String>> _workExperiences = [];
@@ -69,56 +73,19 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
     });
   }
 
-  Widget _buildTextField({
-    @required marginRight,
-    @required obscure,
-    @required enableText,
-    @required function,
-    validator,
-    marginLeft = 30.0,
-    labelText = '',
-    textInputType = TextInputType.text,
-    maxLines = 1,
-  }) {
+  Widget _buildAddButton({Function onPressed}) {
     return Container(
-      margin: EdgeInsets.only(left: marginLeft, right: marginRight),
-      child: TextFormField(
-        readOnly: !enableText,
-        obscureText: obscure,
-        maxLines: maxLines,
-        keyboardType: textInputType,
-        decoration: InputDecoration(
-          errorStyle: TextStyle(color: Colors.red),
-          labelText: labelText,
-          labelStyle: TextStyle(
-            color: Theme.of(context).primaryColor,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
+      width: double.infinity,
+      alignment: Alignment.centerLeft,
+      margin: const EdgeInsets.only(left: 30),
+      child: IconButton(
+        icon: Icon(
+          Icons.add_circle_outline,
+          color: Theme.of(context).primaryColor,
         ),
-        onChanged: function,
-        validator: validator,
+        onPressed: onPressed,
       ),
     );
-  }
-
-  void _updateValueOfListFields(String val, int index, List list, String key) {
-    list[index][key] = val;
-    print(val);
   }
 
   @override
@@ -151,9 +118,12 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 30),
-                    _buildTextField(
+                    CustomTextField(
+                        initValue: _email,
                         function: (val) {
-                          _email = val;
+                          setState(() {
+                            _email = val;
+                          });
                           print('email: $_email');
                         },
                         labelText: 'Email',
@@ -169,7 +139,8 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           }
                         }),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                        initValue: _password,
                         function: (val) {
                           _password = val;
                           // print(_email);
@@ -187,7 +158,8 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           }
                         }),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                        initValue: _retypePassword,
                         function: (val) {
                           _retypePassword = val;
                           print(_retypePassword);
@@ -207,7 +179,8 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           }
                         }),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                        initValue: _name,
                         function: (val) {
                           _name = val;
                           print(_name);
@@ -269,7 +242,6 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     TextFieldHeader(
                       context: context,
                       header: 'Gender',
-                      error: false,
                     ),
                     Container(
                       width: double.infinity,
@@ -278,6 +250,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         right: 270,
                       ),
                       child: DropdownButtonFormField(
+                        value: _genderSelected,
                         decoration: InputDecoration(
                           errorStyle: TextStyle(color: Colors.red),
                         ),
@@ -309,7 +282,6 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     TextFieldHeader(
                       context: context,
                       header: 'Availability',
-                      error: false,
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -360,316 +332,145 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 150),
-                      child: DropdownButtonFormField(
-                        value: _schoolSelected,
-                        validator: (val) {
-                          if (val == null) {
-                            return 'Please select one';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                        hint: Text(
-                          'University/Polytechnic',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onChanged: (val) => setState(() {
-                          this._schoolSelected = val;
-                          this._facultySelected = null;
-                          this._courseSelected = null;
-                          this._specialisationSelected = null;
-                          print(this._schoolSelected);
-                        }),
-                        items: DummyData()
-                            .schools
-                            .map(
-                              (school) => DropdownMenuItem(
-                                child: Text(school),
-                                value: school,
-                              ),
-                            )
-                            .toList(),
-                      ),
+                    CustomDropdownField(
+                      value: _schoolSelected,
+                      onChanged: (val) => setState(() {
+                        this._schoolSelected = val;
+                        this._facultySelected = null;
+                        this._courseSelected = null;
+                        this._specialisationSelected = null;
+                        print(this._schoolSelected);
+                      }),
+                      items: DummyData()
+                          .schools
+                          .map(
+                            (school) => DropdownMenuItem(
+                              child: Text(school),
+                              value: school,
+                            ),
+                          )
+                          .toList(),
+                      hintText: 'University/Polytechnic',
                     ),
                     SizedBox(height: 25),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 150),
-                      child: DropdownButtonFormField(
-                        validator: (val) {
-                          if (val == null) {
-                            return 'Please select one';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                        value: _facultySelected,
-                        isExpanded: true,
-                        hint: Text(
-                          'Faculty',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onChanged: (val) => setState(() {
+                    CustomDropdownField(
+                      hintText: 'Faculty',
+                      items: _schoolSelected != null
+                          ? DummyData()
+                              .faculties[_schoolSelected]
+                              .map(
+                                (faculty) => DropdownMenuItem(
+                                  child: Text(faculty),
+                                  value: faculty,
+                                ),
+                              )
+                              .toList()
+                          : [
+                              DropdownMenuItem(
+                                child: Text(
+                                  _errorMessage,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                value: _errorMessage,
+                              ),
+                            ],
+                      onChanged: (val) => setState(
+                        () {
                           this._facultySelected = val;
                           this._courseSelected = null;
                           this._specialisationSelected = null;
                           print(_facultySelected);
-                        }),
-                        items: _schoolSelected != null
-                            ? DummyData()
-                                .faculties[_schoolSelected]
-                                .map(
-                                  (faculty) => DropdownMenuItem(
-                                    child: Text(faculty),
-                                    value: faculty,
-                                  ),
-                                )
-                                .toList()
-                            : [
-                                DropdownMenuItem(
-                                  child: Text(
-                                    _errorMessage,
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  value: _errorMessage,
-                                ),
-                              ],
+                        },
                       ),
+                      value: _facultySelected,
                     ),
                     SizedBox(height: 25),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 150),
-                      child: DropdownButtonFormField(
-                        validator: (val) {
-                          if (val == null) {
-                            return 'Please select one';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                        value: this._courseSelected,
-                        isExpanded: true,
-                        hint: Text(
-                          'Course',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onChanged: (val) => setState(() {
+                    CustomDropdownField(
+                      value: _courseSelected,
+                      hintText: 'Course',
+                      onChanged: (val) => setState(
+                        () {
                           this._courseSelected = val;
                           this._specialisationSelected = null;
                           print(this._courseSelected);
-                        }),
-                        items: _facultySelected == null ||
-                                _facultySelected == _errorMessage
-                            ? [
-                                DropdownMenuItem(
-                                  child: Text(
-                                    _errorMessage,
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  value: _errorMessage,
-                                ),
-                              ]
-                            : DummyData()
-                                .courses[_facultySelected]
-                                .map(
-                                  (course) => DropdownMenuItem(
-                                    child: Text(course),
-                                    value: course,
-                                  ),
-                                )
-                                .toList(),
+                        },
                       ),
+                      items: _facultySelected == null ||
+                              _facultySelected == _errorMessage
+                          ? [
+                              DropdownMenuItem(
+                                child: Text(
+                                  _errorMessage,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                value: _errorMessage,
+                              ),
+                            ]
+                          : DummyData()
+                              .courses[_facultySelected]
+                              .map(
+                                (course) => DropdownMenuItem(
+                                  child: Text(course),
+                                  value: course,
+                                ),
+                              )
+                              .toList(),
                     ),
                     SizedBox(height: 25),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 150),
-                      child: DropdownButtonFormField(
-                        validator: (val) {
-                          if (val == null) {
-                            return 'Please select one';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                        value: _specialisationSelected,
-                        isExpanded: true,
-                        hint: Text(
-                          'Specialisation',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onChanged: (val) => setState(() {
+                    CustomDropdownField(
+                      hintText: 'Specialisation',
+                      items: _courseSelected == null ||
+                              _courseSelected == _errorMessage
+                          ? [
+                              DropdownMenuItem(
+                                child: Text(
+                                  _errorMessage,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                value: _errorMessage,
+                              ),
+                            ]
+                          : DummyData()
+                              .specialisations[_courseSelected]
+                              .map(
+                                (specialisation) => DropdownMenuItem(
+                                  child: Text(specialisation),
+                                  value: specialisation,
+                                ),
+                              )
+                              .toList(),
+                      onChanged: (val) => setState(
+                        () {
                           this._specialisationSelected = val;
                           print(this._specialisationSelected);
-                        }),
-                        items: _courseSelected == null ||
-                                _courseSelected == _errorMessage
-                            ? [
-                                DropdownMenuItem(
-                                  child: Text(
-                                    _errorMessage,
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  value: _errorMessage,
-                                ),
-                              ]
-                            : DummyData()
-                                .specialisations[_courseSelected]
-                                .map(
-                                  (specialisation) => DropdownMenuItem(
-                                    child: Text(specialisation),
-                                    value: specialisation,
-                                  ),
-                                )
-                                .toList(),
+                        },
                       ),
+                      value: _specialisationSelected,
                     ),
                     SizedBox(height: 25),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 150),
-                      child: DropdownButtonFormField(
-                        validator: (val) {
-                          if (val == null) {
-                            return 'Please select one';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                        value: _yearOfStudySelected,
-                        hint: Text(
-                          'Year of study',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onChanged: (val) => setState(() {
+                    CustomDropdownField(
+                      hintText: 'Year of study',
+                      items: DummyData()
+                          .yearOfStudy
+                          .map(
+                            (year) => DropdownMenuItem(
+                              child: Text('$year'),
+                              value: year,
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) => setState(
+                        () {
                           this._yearOfStudySelected = val;
                           print(this._yearOfStudySelected);
-                        }),
-                        items: DummyData()
-                            .yearOfStudy
-                            .map(
-                              (year) => DropdownMenuItem(
-                                child: Text('$year'),
-                                value: year,
-                              ),
-                            )
-                            .toList(),
+                        },
                       ),
+                      value: _yearOfStudySelected,
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
                       context: context,
                       header: 'Skillsets',
-                      error: false,
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -680,14 +481,10 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             .map(
                               (skillset) => DynamicField(
                                 function: (val) {
-                                  _updateValueOfListFields(
-                                    val,
-                                    _skillsets.indexOf(skillset),
-                                    _skillsets,
-                                    'skillset',
-                                  );
+                                  skillset['skillset'] = val;
+                                  print(skillset['skillset']);
                                 },
-                                item: skillset,
+                                item: skillset['skillset'],
                                 key: ValueKey(skillset['id']),
                                 deleteField: _deleteField,
                                 labelText:
@@ -699,31 +496,22 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             .toList(),
                       ),
                     ),
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(left: 30),
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.add_circle_outline,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _skillsets.add({
-                                'skillset': '',
-                                'id': DateTime.now().toString()
-                              });
-                              print(DateTime.now().toString());
-                              print(_skillsets.length);
-                            });
-                          }),
+                    _buildAddButton(
+                      onPressed: () {
+                        setState(() {
+                          _skillsets.add({
+                            'skillset': '',
+                            'id': DateTime.now().toString()
+                          });
+                          print(DateTime.now().toString());
+                          print(_skillsets.length);
+                        });
+                      },
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
                       context: context,
                       header: 'Past projects',
-                      error: false,
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -734,14 +522,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             .map(
                               (pastProject) => DynamicField(
                                 function: (val) {
-                                  _updateValueOfListFields(
-                                    val,
-                                    _pastProjects.indexOf(pastProject),
-                                    _pastProjects,
-                                    'pastProj',
-                                  );
+                                  pastProject['pastProj'] = val;
                                 },
-                                item: pastProject,
+                                item: pastProject['pastProj'],
                                 key: ValueKey(pastProject['id']),
                                 deleteField: _deleteField,
                                 labelText: 'Project name and short description',
@@ -752,30 +535,20 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             .toList(),
                       ),
                     ),
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(left: 30),
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.add_circle_outline,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _pastProjects.add({
-                                'pastProj': '',
-                                'id': DateTime.now().toString()
-                              });
-                              print(DateTime.now().toString());
-                            });
-                          }),
+                    _buildAddButton(
+                      onPressed: () {
+                        setState(() {
+                          _pastProjects.add({
+                            'pastProj': '',
+                            'id': DateTime.now().toString()
+                          });
+                          print(DateTime.now().toString());
+                        });
+                      },
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                        error: false,
-                        context: context,
-                        header: 'Work experience'),
+                        context: context, header: 'Work experience'),
                     SizedBox(height: 10),
                     Container(
                       height: 70.0 * _workExperiences.length,
@@ -785,14 +558,9 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             .map(
                               (workExperience) => DynamicField(
                                 function: (val) {
-                                  _updateValueOfListFields(
-                                    val,
-                                    _workExperiences.indexOf(workExperience),
-                                    _workExperiences,
-                                    'workExp',
-                                  );
+                                  workExperience['workExp'] = val;
                                 },
-                                item: workExperience,
+                                item: workExperience['workExp'],
                                 key: ValueKey(workExperience['id']),
                                 deleteField: _deleteField,
                                 labelText: 'Job title and short description',
@@ -803,30 +571,20 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             .toList(),
                       ),
                     ),
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(left: 30),
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.add_circle_outline,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _workExperiences.add({
-                                'workExp': '',
-                                'id': DateTime.now().toString()
-                              });
-                            });
-                          }),
+                    _buildAddButton(
+                      onPressed: () {
+                        setState(() {
+                          _workExperiences.add(
+                              {'workExp': '', 'id': DateTime.now().toString()});
+                        });
+                      },
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                        error: false,
                         context: context,
                         header: 'Short description of yourself'),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _shortDescription,
                       validator: (val) {
                         if (val.isEmpty) {
                           return 'Please fill a short description';
@@ -844,7 +602,6 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                        error: false,
                         context: context,
                         header: 'Upload personal CV file [Optional]'),
                     SizedBox(height: 10),
@@ -864,7 +621,6 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                        error: false,
                         context: context,
                         header: 'Upload profile picture [Optional]'),
                     SizedBox(height: 10),
@@ -885,7 +641,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     SizedBox(height: 50),
                     if (_failedRegistration)
                       Text(
-                        'Please enter a valid email',
+                        'Please enter a valid email / email is already in use',
                         style: TextStyle(color: Colors.red),
                       ),
                     if (_registrationError)
@@ -893,44 +649,89 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         ' Registration unsucessful\nPlease refer to above fields ',
                         style: TextStyle(color: Colors.red),
                       ),
+                    if (_emptyPastProjField ||
+                        _emptySkillsetField ||
+                        _emptyWorkExpField)
+                      Text(
+                        '                             Please ensure that all\nskillsets/past projects/work experience fields are filled ',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     SizedBox(
                       width: 100,
                       child: FlatButton(
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            setState(() {
-                              _loading = true;
-                            });
-                            dynamic result =
-                                await _auth.registerWithEmailAndPassword(
-                              email: _email,
-                              password: _password,
-                              employer: false,
-                              name: _name,
-                              dob: _dateSelected,
-                              gender: _genderSelected,
-                              start: _startDateSelected,
-                              end: _endDateSelected,
-                              school: _schoolSelected,
-                              faculty: _facultySelected,
-                              course: _courseSelected,
-                              spec: _specialisationSelected,
-                              yearOfStudy: _yearOfStudySelected,
-                              skillsets: _skillsets,
-                              pastProj: _pastProjects,
-                              workExp: _workExperiences,
-                              shortDesc: _shortDescription,
-                            );
-                            if (result == null) {
+                            for (int i = 0; i < _skillsets.length; i++) {
+                              if (_skillsets[i]['skillset'] == '') {
+                                setState(
+                                  () {
+                                    _registrationError = false;
+                                    _emptySkillsetField = true;
+                                  },
+                                );
+                                break;
+                              }
+                              _emptySkillsetField = false;
+                            }
+                            for (int i = 0; i < _pastProjects.length; i++) {
+                              if (_pastProjects[i]['pastProj'] == '') {
+                                setState(() {
+                                  _registrationError = false;
+                                  _emptyPastProjField = true;
+                                });
+                                break;
+                              }
+                              _emptyPastProjField = false;
+                            }
+                            for (int i = 0; i < _workExperiences.length; i++) {
+                              if (_workExperiences[i]['workExp'] == '') {
+                                setState(() {
+                                  _registrationError = false;
+                                  _emptyWorkExpField = true;
+                                });
+                                break;
+                              }
+                              _emptyWorkExpField = false;
+                            }
+                            if (_emptyWorkExpField == false &&
+                                _emptyPastProjField == false &&
+                                _emptySkillsetField == false) {
                               setState(() {
-                                _loading = false;
-                                _failedRegistration = true;
+                                _loading = true;
                               });
-                            } else {
-                              Navigator.pop(context);
+                              dynamic result =
+                                  await _auth.registerWithEmailAndPassword(
+                                email: _email,
+                                password: _password,
+                                employer: false,
+                                name: _name,
+                                dob: _dateSelected,
+                                gender: _genderSelected,
+                                start: _startDateSelected,
+                                end: _endDateSelected,
+                                school: _schoolSelected,
+                                faculty: _facultySelected,
+                                course: _courseSelected,
+                                spec: _specialisationSelected,
+                                yearOfStudy: _yearOfStudySelected,
+                                skillsets: _skillsets,
+                                pastProj: _pastProjects,
+                                workExp: _workExperiences,
+                                shortDesc: _shortDescription,
+                              );
+                              if (result == null) {
+                                setState(() {
+                                  _loading = false;
+                                  _failedRegistration = true;
+                                  _registrationError = false;
+                                });
+                              } else {
+                                Navigator.pop(context);
+                              }
                             }
                           } else {
                             setState(() {
+                              _failedRegistration = false;
                               _registrationError = true;
                             });
                           }

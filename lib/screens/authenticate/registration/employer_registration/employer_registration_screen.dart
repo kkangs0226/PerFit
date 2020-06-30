@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../../models/jobs_for_interns.dart';
-import '../../../../widgets/dropdown_border.dart';
 import '../../../../widgets/textfield_header.dart';
 import './add_job_screen.dart';
 import '../../../../widgets/dynamic_field.dart';
 import '../../../../dummy_data.dart';
 import '../../../../services/auth.dart';
 import '../../../../widgets/loading.dart';
+import '../../../../widgets/dropdownfield.dart';
+import '../../../../widgets/textfield.dart';
 
 class EmployerRegistrationPage extends StatefulWidget {
   static const routeName = '/employerRegistationPage';
@@ -34,56 +35,11 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
   bool _registrationError = false;
   bool _failedRegistration = false;
   bool _loading = false;
+  bool _pastProjectsEmpty = false;
   List<Map<String, dynamic>> _jobForInterns = [];
   List<Map<String, String>> _pastProjects = [];
   final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
-
-  Widget _buildTextField({
-    @required marginRight,
-    @required obscure,
-    @required enableText,
-    @required function,
-    validator,
-    marginLeft = 30.0,
-    labelText = '',
-    textInputType = TextInputType.text,
-    maxLines = 1,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(left: marginLeft, right: marginRight),
-      child: TextFormField(
-        readOnly: !enableText,
-        obscureText: obscure,
-        maxLines: maxLines,
-        keyboardType: textInputType,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: TextStyle(
-            color: Theme.of(context).primaryColor,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-        ),
-        onChanged: function,
-        validator: validator,
-      ),
-    );
-  }
 
   void _deleteField(List list, String id) {
     setState(() {
@@ -92,11 +48,6 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
         print(list[i]['id']);
       }
     });
-  }
-
-  void _updateValueOfListFields(String val, int index, List list, String key) {
-    list[index][key] = val;
-    print(val);
   }
 
   @override
@@ -129,7 +80,8 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 30),
-                    _buildTextField(
+                    CustomTextField(
+                        initValue: _email,
                         function: (val) {
                           _email = val;
                           print(_email);
@@ -147,7 +99,8 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                           }
                         }),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                        initValue: _password,
                         function: (val) {
                           _password = val;
                           print(_password);
@@ -164,7 +117,8 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                           }
                         }),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                        initValue: _retypePassword,
                         function: (val) {
                           _retypePassword = val;
                           print(_retypePassword);
@@ -184,10 +138,17 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                           }
                         }),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _name,
                       function: (val) {
                         _name = val;
                         print(_name);
+                      },
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
                       },
                       labelText: 'Your name',
                       marginRight: 100.0,
@@ -195,10 +156,17 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       enableText: true,
                     ),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _companyName,
                       function: (val) {
                         _companyName = val;
                         print(_companyName);
+                      },
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Please enter company\'s name';
+                        }
+                        return null;
                       },
                       labelText: 'Company name',
                       marginRight: 100.0,
@@ -206,10 +174,17 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       enableText: true,
                     ),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _companyAddress,
                       function: (val) {
                         _companyAddress = val;
                         print(_companyAddress);
+                      },
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Please enter company\'s address';
+                        }
+                        return null;
                       },
                       labelText: 'Company address',
                       marginRight: 100.0,
@@ -218,10 +193,17 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       maxLines: 3,
                     ),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _companyRegistrationNumber,
                       function: (val) {
                         _companyRegistrationNumber = val;
                         print(_companyRegistrationNumber);
+                      },
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Please enter company\'s registration number';
+                        }
+                        return null;
                       },
                       labelText: 'Company registration number',
                       marginRight: 100.0,
@@ -229,63 +211,37 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       enableText: true,
                     ),
                     SizedBox(height: 25),
-                    Container(
-                      margin: EdgeInsets.only(left: 30, right: 150),
-                      child: DropdownButtonFormField(
-                        value: _industrySelected,
-                        validator: (val) {
-                          if (val == null) {
-                            return 'Please select one';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                        hint: Text(
-                          'Industry',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onChanged: (val) => setState(() {
+                    CustomDropdownField(
+                      hintText: 'Industry',
+                      items: DummyData()
+                          .industries
+                          .map(
+                            (year) => DropdownMenuItem(
+                              child: Text('$year'),
+                              value: year,
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) => setState(
+                        () {
                           this._industrySelected = val;
                           print(this._industrySelected);
-                        }),
-                        items: DummyData()
-                            .industries
-                            .map(
-                              (year) => DropdownMenuItem(
-                                child: Text('$year'),
-                                value: year,
-                              ),
-                            )
-                            .toList(),
+                        },
                       ),
+                      value: _industrySelected,
                     ),
                     SizedBox(height: 25),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _officeNumber == null ? '' : '$_officeNumber',
                       function: (val) {
                         _officeNumber = int.parse(val);
                         print(_officeNumber);
+                      },
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Please enter office number';
+                        }
+                        return null;
                       },
                       labelText: 'Office number',
                       marginRight: 180.0,
@@ -297,10 +253,19 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     Stack(
                       children: [
                         Container(
-                          child: _buildTextField(
+                          child: CustomTextField(
+                            initValue: _personalNumber == null
+                                ? ''
+                                : '$_personalNumber',
                             function: (val) {
                               _personalNumber = int.parse(val);
                               print(_personalNumber);
+                            },
+                            validator: (val) {
+                              if (val.isEmpty) {
+                                return 'Please enter personal number';
+                              }
+                              return null;
                             },
                             labelText: 'Personal number',
                             marginRight: 180.0,
@@ -341,7 +306,6 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     TextFieldHeader(
                       context: context,
                       header: 'Company logo',
-                      error: false,
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -364,13 +328,19 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     TextFieldHeader(
                       context: context,
                       header: 'About company',
-                      error: false,
                     ),
                     SizedBox(height: 10),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _aboutCompany,
                       function: (val) {
                         _aboutCompany = val;
                         print(_aboutCompany);
+                      },
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Please describe your company';
+                        }
+                        return null;
                       },
                       labelText: '',
                       marginRight: 100.0,
@@ -380,12 +350,12 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                        error: false,
                         context: context,
                         header:
                             'What can interns hope to gain from \njoining your company?'),
                     SizedBox(height: 10),
-                    _buildTextField(
+                    CustomTextField(
+                      initValue: _internsGain,
                       function: (val) {
                         _internsGain = val;
                         print(_internsGain);
@@ -397,7 +367,6 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                      error: false,
                       context: context,
                       header: 'Jobs for interns',
                     ),
@@ -410,12 +379,13 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                             .map(
                               (job) => DynamicField(
                                 function: null,
-                                item: job,
+                                item: job['jobTitle'],
                                 key: ValueKey(job['id']),
                                 deleteField: _deleteField,
                                 labelText: job['jobTitle'],
                                 list: _jobForInterns,
                                 id: job['id'],
+                                enableText: false,
                               ),
                             )
                             .toList(),
@@ -431,10 +401,14 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                           color: Theme.of(context).primaryColor,
                         ),
                         onPressed: () async {
+                          setState(() {
+                            _loading = true;
+                          });
                           final result = await Navigator.of(context)
                               .pushNamed(AddJobPage.routeName);
                           setState(
                             () {
+                              _loading = false;
                               if (result != null) {
                                 JobForInterns job = result;
                                 print(job.jobTitle);
@@ -463,7 +437,6 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     TextFieldHeader(
                       context: context,
                       header: 'Past projects',
-                      error: false,
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -473,19 +446,14 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                         children: _pastProjects
                             .map(
                               (pastProject) => DynamicField(
-                                item: pastProject,
+                                item: pastProject['pastProj'],
                                 key: ValueKey(pastProject['id']),
                                 deleteField: _deleteField,
                                 labelText: 'Project name and short description',
                                 list: _pastProjects,
                                 id: pastProject['id'],
                                 function: (val) {
-                                  _updateValueOfListFields(
-                                    val,
-                                    _pastProjects.indexOf(pastProject),
-                                    _pastProjects,
-                                    'pastProj',
-                                  );
+                                  pastProject['pastProj'] = val;
                                 },
                               ),
                             )
@@ -515,7 +483,6 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     ),
                     SizedBox(height: 25),
                     TextFieldHeader(
-                      error: false,
                       context: context,
                       header:
                           'Upload personal profile\n[docx,pdf,ppt][Optional]',
@@ -540,7 +507,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                     SizedBox(height: 50),
                     if (_failedRegistration)
                       Text(
-                        'Please enter a valid email',
+                        'Please enter a valid email / email is already in use',
                         style: TextStyle(color: Colors.red),
                       ),
                     if (_registrationError)
@@ -548,42 +515,63 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                         ' Registration unsucessful\nPlease refer to above fields ',
                         style: TextStyle(color: Colors.red),
                       ),
+                    if (_pastProjectsEmpty)
+                      Text(
+                        'Please ensure all past projects fields are filled',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     SizedBox(
                       width: 100,
                       child: FlatButton(
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            setState(() {
-                              _loading = true;
-                            });
-                            dynamic result =
-                                await _auth.registerWithEmailAndPassword(
-                              email: _email,
-                              password: _password,
-                              employer: true,
-                              name: _name,
-                              companyName: _companyName,
-                              companyAdd: _companyAddress,
-                              companyRegNo: _companyRegistrationNumber,
-                              industry: _industrySelected,
-                              officeNum: _officeNumber,
-                              personalNum: _personalNumber,
-                              personalNumOnProf: _toShowPersonalNumber,
-                              aboutCompany: _aboutCompany,
-                              internsGain: _internsGain,
-                              jobsForInterns: _jobForInterns,
-                              pastProj: _pastProjects,
-                            );
-                            if (result == null) {
+                            for (int i = 0; i < _pastProjects.length; i++) {
+                              if (_pastProjects[i]['pastProj'] == '') {
+                                setState(
+                                  () {
+                                    _registrationError = false;
+                                    _pastProjectsEmpty = true;
+                                  },
+                                );
+                                break;
+                              }
+                              _pastProjectsEmpty = false;
+                            }
+                            if (_pastProjectsEmpty == false) {
                               setState(() {
-                                _loading = false;
-                                _failedRegistration = true;
+                                _loading = true;
                               });
-                            } else {
-                              Navigator.pop(context);
+                              dynamic result =
+                                  await _auth.registerWithEmailAndPassword(
+                                email: _email,
+                                password: _password,
+                                employer: true,
+                                name: _name,
+                                companyName: _companyName,
+                                companyAdd: _companyAddress,
+                                companyRegNo: _companyRegistrationNumber,
+                                industry: _industrySelected,
+                                officeNum: _officeNumber,
+                                personalNum: _personalNumber,
+                                personalNumOnProf: _toShowPersonalNumber,
+                                aboutCompany: _aboutCompany,
+                                internsGain: _internsGain,
+                                jobsForInterns: _jobForInterns,
+                                pastProj: _pastProjects,
+                              );
+                              if (result == null) {
+                                setState(() {
+                                  _loading = false;
+                                  _failedRegistration = true;
+                                  _registrationError = false;
+                                });
+                              } else {
+                                Navigator.pop(context);
+                              }
                             }
                           } else {
                             setState(() {
+                              _failedRegistration = false;
                               _registrationError = true;
                             });
                           }

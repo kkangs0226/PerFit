@@ -22,15 +22,18 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _failedLogin = false;
   bool _loading = false;
 
-  Widget _buildLoginField(
-      {String hintText,
-      bool obscure,
-      BuildContext context,
-      Function validator,
-      Function function}) {
+  Widget _buildLoginField({
+    String hintText,
+    bool obscure,
+    BuildContext context,
+    Function validator,
+    Function function,
+    String initValue,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 70.0),
       child: TextFormField(
+        initialValue: initValue,
         obscureText: obscure,
         autocorrect: false,
         decoration: InputDecoration(
@@ -117,6 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         _buildLoginField(
+                          initValue: _email,
                           hintText: 'email',
                           context: context,
                           obscure: false,
@@ -131,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Stack(
                           children: [
                             _buildLoginField(
+                              initValue: _password,
                               hintText: 'password',
                               context: context,
                               obscure: true,
@@ -175,8 +180,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 30,
                       child: Center(
                         child: Text(
-                          'Please check your credentials',
-                          style: TextStyle(color: Colors.red[900]),
+                          'Please enter a valid email/password',
+                          style: TextStyle(color: Colors.red[700]),
                         ),
                       ),
                     ),
@@ -216,19 +221,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         _buildNavigationHomepageButton(
                           context,
                           'Student',
-                          () {
-                            Navigator.of(context)
+                          () async {
+                            setState(() {
+                              _loading = true;
+                            });
+                            await Navigator.of(context)
                                 .pushNamed(TabsScreen.routeName);
+                            setState(() {
+                              _loading = false;
+                            });
                           },
                         ),
                         SizedBox(height: 15),
                         _buildNavigationHomepageButton(context, 'Employer',
                             () async {
-                          // setState(() {
-                          //   _loading = true;
-                          // });
+                          setState(() {
+                            _loading = true;
+                          });
                           await Navigator.of(context)
                               .pushNamed(TabsScreen.routeName);
+                          setState(() {
+                            _loading = false;
+                          });
                         }),
                         SizedBox(height: 25),
                         Text(
@@ -240,14 +254,32 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 10,
                         ),
                         _buildNavigateRegistrationButton(
-                            context, 'create student account', () {
-                          Navigator.of(context)
+                            context, 'create student account', () async {
+                          setState(() {
+                            _loading = true;
+                          });
+                          await Navigator.of(context)
                               .pushNamed(StudentRegistrationPage.routeName);
+                          setState(() {
+                            _failedLogin = false;
+                          });
+                          setState(() {
+                            _loading = false;
+                          });
                         }),
                         _buildNavigateRegistrationButton(
-                            context, 'create employer account', () {
-                          Navigator.of(context)
+                            context, 'create employer account', () async {
+                          setState(() {
+                            _loading = true;
+                          });
+                          await Navigator.of(context)
                               .pushNamed(EmployerRegistrationPage.routeName);
+                          setState(() {
+                            _failedLogin = false;
+                          });
+                          setState(() {
+                            _loading = false;
+                          });
                         }),
                       ],
                     ),
