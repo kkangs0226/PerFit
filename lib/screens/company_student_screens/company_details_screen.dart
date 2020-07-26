@@ -18,7 +18,6 @@ class CompanyDetailsScreen extends StatelessWidget {
     final companyId = ModalRoute.of(context).settings.arguments as String;
     final selectedCompany = Provider.of<CompaniesList>(
       context,
-      listen: false,
     ).findById(companyId);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);

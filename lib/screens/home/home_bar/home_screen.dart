@@ -18,10 +18,8 @@ import '../../../models/student.dart';
 //import '../../../models/';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../chat_bar/chat_screen.dart';
 import '../../../models/chat.dart';
-import '../../../widgets/loading.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home_screen';
@@ -35,8 +33,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isEmployer;
+  FirebaseUser currentUser;
+
   //List<Map<String, String>> _courseName = [];
-  bool isStudent = false;
+  bool isStudent = true;
 
   Widget _buildHoriScroll(List<Widget> widgetList) {
     return Container(
@@ -60,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
           value: widgetList[i],
           child: CompanyWidget(),
         ),
+
+        //itemBuilder: (ctx, i) => ,
       ),
     );
   }
