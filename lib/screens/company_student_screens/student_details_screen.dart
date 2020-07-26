@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/student.dart';
 import '../../providers/offers.dart';
+import '../../providers/students_list.dart';
 
 class StudentDetailsScreen extends StatelessWidget {
   static const routeName = './student_details_screen';
@@ -18,8 +19,10 @@ class StudentDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final studentName = ModalRoute.of(context).settings.arguments as String;
-    final selectedStudent = Provider.of<Student>(context, listen: false);
+    final studentName = ModalRoute.of(context).settings.arguments as String;
+    final selectedStudent = Provider.of<StudentsList>(
+      context,
+    ).findById(studentName);
     final offerList = Provider.of<Offers>(context, listen: false);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);

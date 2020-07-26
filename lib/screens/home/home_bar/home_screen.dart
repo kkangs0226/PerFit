@@ -18,11 +18,6 @@ import '../../../models/student.dart';
 //import '../../../models/';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:perfit_app/screens/company_student_screens/company_details_screen.dart';
-import './course_job_screen.dart';
-import './new_companies_screen.dart';
-import '../favourites_bar/favourites_companies_screen.dart';
 import '../chat_bar/chat_screen.dart';
 import '../../../models/chat.dart';
 import '../../../widgets/loading.dart';
@@ -36,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isEmployer;
-  bool _isLoading = false;
+  bool _isLoading = true;
   FirebaseUser currentUser;
 
   @override
@@ -92,6 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
           value: widgetList[i],
           child: CompanyWidget(),
         ),
+
+        //itemBuilder: (ctx, i) => ,
       ),
     );
   }
