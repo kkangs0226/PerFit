@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:perfit_app/dummy_data.dart';
+import 'package:provider/provider.dart';
+//import 'package:perfit_app/dummy_data.dart';
+
+import '../../providers/companies_list.dart';
 
 class CompanyDetailsScreen extends StatelessWidget {
   static const routeName = './company_details_screen';
 
-  final Function toggleFavourites;
+  /*final Function toggleFavourites;
   final Function isFavourite;
 
   CompanyDetailsScreen(this.toggleFavourites, this.isFavourite);
+  */
 
   @override
   Widget build(BuildContext context) {
     final companyId = ModalRoute.of(context).settings.arguments as String;
-    final selectedCompany = DummyData.DUMMY_COMPANIES
-        .firstWhere((company) => company.id == companyId);
+    final selectedCompany = Provider.of<CompaniesList>(
+      context,
+      listen: false,
+    ).findById(companyId);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -48,9 +54,6 @@ class CompanyDetailsScreen extends StatelessWidget {
                 ),
                 Container(
                   width: mediaQueryData.size.width * 0.6,
-                  //height: mediaQueryData.size.height * 0.5,
-                  //width: 100,
-                  //margin: EdgeInsets.all(0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -62,11 +65,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                           //'Name: djklajfdklfjlasdjfklasjf',
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w700,
-                          ),
+                          style: Theme.of(context).textTheme.headline3,
                         ),
                       ),
                       Padding(
@@ -78,11 +77,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                               'Industry: ${selectedCompany.industry}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             Container(
                               //width: mediaQueryData.size.width * 0.4,
@@ -91,32 +86,20 @@ class CompanyDetailsScreen extends StatelessWidget {
                                 //'Name: djklajfdklfjlasdjfklasjf',
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: Theme.of(context).textTheme.bodyText1,
                               ),
                             ),
                             Text(
                               'Location: ${selectedCompany.location}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             Text(
                               'Date Joined: ${selectedCompany.joinedDate}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ],
                         ),
@@ -154,7 +137,7 @@ class CompanyDetailsScreen extends StatelessWidget {
                           Text(
                             'Title: ${selectedCompany.tempJob['title']}',
                             style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+                                fontSize: 14, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 8,
@@ -178,13 +161,43 @@ class CompanyDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(
-            isFavourite(companyId) ? Icons.favorite : Icons.favorite_border,
-            color: Color.fromRGBO(250, 20, 131, 1.0),
-          ),
-          onPressed: () => toggleFavourites(companyId)),
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(
+              selectedCompany.isFavourite
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: Color.fromRGBO(250, 20, 131, 1.0),
+            ),
+            onPressed: () {
+              selectedCompany.toggleFavourites();
+              if (selectedCompany.isFavourite) {
+                Scaffold.of(context).hideCurrentSnackBar();
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('You favourited ${selectedCompany.name}!'),
+                    duration: Duration(
+                      seconds: 2,
+                    ),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).hideCurrentSnackBar();
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('You unfavourited ${selectedCompany.name}!'),
+                    duration: Duration(
+                      seconds: 2,
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        },
+      ),
     );
   }
 }

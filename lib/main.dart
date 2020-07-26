@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:perfit_app/dummy_data.dart';
+import 'package:perfit_app/providers/companies_list.dart';
+import 'package:perfit_app/providers/offers.dart';
+import 'package:perfit_app/providers/students_list.dart';
 import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/offer_status_employer_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/offer_status_student_screen.dart';
@@ -37,7 +40,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<Student> _offerListOfStudents = [];
+  /*List<Student> _offerListOfStudents = [];
   List<Company> _favouritedCompanies = [];
 
   bool _gaveOffer(String studentName) {
@@ -77,65 +80,107 @@ class _MyAppState extends State<MyApp> {
       });
     }
   }
+  */
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User>.value(
-      value: AuthService().user,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.white,
-          fontFamily: 'Pacifico',
-          textTheme: ThemeData.light().textTheme.copyWith(
-                headline6: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                headline1: TextStyle(
-                  fontSize: 20,
-                ),
-                headline2: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-                bodyText1: TextStyle(
-                  fontFamily: 'Monserrat',
-                ),
-                bodyText2: TextStyle(fontFamily: 'Monserrat'),
-              ),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => CompaniesList(),
         ),
-        initialRoute: Wrapper.routeName,
-        routes: {
-          TabsScreen.routeName: (ctx) => TabsScreen(),
-          LoginScreen.routeName: (ctx) => LoginScreen(),
-          StudentRegistrationPage.routeName: (ctx) => StudentRegistrationPage(),
-          EmployerRegistrationPage.routeName: (ctx) =>
-              EmployerRegistrationPage(),
-          SuccessfulRegistration.routeName: (ctx) => SuccessfulRegistration(),
-          ForgotPasswordPage.routeName: (ctx) => ForgotPasswordPage(),
-          AddJobPage.routeName: (ctx) => AddJobPage(),
-          Wrapper.routeName: (ctx) => Wrapper(),
-          CourseJobScreen.routeName: (ctx) => CourseJobScreen(),
-          CourseStudentScreen.routeName: (ctx) => CourseStudentScreen(),
-          FavouritedStudentsScreen.routeName: (ctx) =>
-              FavouritedStudentsScreen(),
-          FavouritesCompaniesScreen.routeName: (ctx) =>
-              FavouritesCompaniesScreen(),
-          NewCompaniesScreen.routeName: (ctx) => NewCompaniesScreen(),
-          CompanyDetailsScreen.routeName: (ctx) =>
-              CompanyDetailsScreen(_toggleFavourites, _isFavourite),
-          OfferStatusEmployerScreen.routeName: (ctx) =>
-              OfferStatusEmployerScreen(),
-          OfferStatusStudentScreen.routeName: (ctx) =>
-              OfferStatusEmployerScreen(),
-          StudentDetailsScreen.routeName: (ctx) =>
-              StudentDetailsScreen(_toggleOffer, _gaveOffer),
-        },
+        ChangeNotifierProvider(
+          create: (ctx) => StudentsList(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Offers(),
+        ),
+      ],
+      child: StreamProvider<User>.value(
+        value: AuthService().user,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            accentColor: Colors.white,
+            fontFamily: 'Montserrat',
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6: TextStyle(
+                    fontSize: 25,
+                    fontFamily: 'Pacifico',
+                    color: Colors.white,
+                  ),
+                  headline1: TextStyle(
+                    //fontFamily: 'Montserrat',
+                    fontSize: 19,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                  ),
+                  headline2: TextStyle(
+                    //fontFamily: 'Montserrat',
+                    fontSize: 13,
+                    color: Colors.black,
+                  ),
+                  headline3: TextStyle(
+                    fontSize: 11,
+                    //fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                  headline4: TextStyle(
+                    fontSize: 9,
+                    //fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                  headline5: TextStyle(
+                    //fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 10,
+                    color: Colors.black,
+                  ),
+                  bodyText1: TextStyle(
+                    fontSize: 12,
+                    //fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                  bodyText2: TextStyle(
+                    //fontFamily: 'Montserrat',
+                    fontSize: 11,
+                    color: Colors.black,
+                  ),
+                ),
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          initialRoute: Wrapper.routeName,
+          routes: {
+            TabsScreen.routeName: (ctx) => TabsScreen(),
+            LoginScreen.routeName: (ctx) => LoginScreen(),
+            StudentRegistrationPage.routeName: (ctx) =>
+                StudentRegistrationPage(),
+            EmployerRegistrationPage.routeName: (ctx) =>
+                EmployerRegistrationPage(),
+            SuccessfulRegistration.routeName: (ctx) => SuccessfulRegistration(),
+            ForgotPasswordPage.routeName: (ctx) => ForgotPasswordPage(),
+            AddJobPage.routeName: (ctx) => AddJobPage(),
+            Wrapper.routeName: (ctx) => Wrapper(),
+            CourseJobScreen.routeName: (ctx) => CourseJobScreen(),
+            CourseStudentScreen.routeName: (ctx) => CourseStudentScreen(),
+            FavouritedStudentsScreen.routeName: (ctx) =>
+                FavouritedStudentsScreen(),
+            FavouritesCompaniesScreen.routeName: (ctx) =>
+                FavouritesCompaniesScreen(),
+            NewCompaniesScreen.routeName: (ctx) => NewCompaniesScreen(),
+            CompanyDetailsScreen.routeName: (ctx) => CompanyDetailsScreen(),
+            OfferStatusEmployerScreen.routeName: (ctx) =>
+                OfferStatusEmployerScreen(),
+            OfferStatusStudentScreen.routeName: (ctx) =>
+                OfferStatusEmployerScreen(),
+            StudentDetailsScreen.routeName: (ctx) => StudentDetailsScreen(),
+          },
+        ),
       ),
     );
   }

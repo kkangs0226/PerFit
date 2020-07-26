@@ -103,12 +103,7 @@ class Heading extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       isStudent || headingName == 'COURSES' ? 'COURSES' : 'NEW',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 19,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.black,
-                      ),
+                      style: Theme.of(context).textTheme.headline1,
                     ),
                     SizedBox(
                       width: 8,
@@ -127,12 +122,7 @@ class Heading extends StatelessWidget {
                         : headingName == 'COURSES'
                             ? mapEmployer['COURSES']['description']
                             : mapEmployer['NEW']['description'],
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black87,
-                    ),
+                    style: Theme.of(context).textTheme.headline2,
                   ),
                 ),
               ],
@@ -149,12 +139,7 @@ class Heading extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         headingName,
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 19,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
-                        ),
+                        style: Theme.of(context).textTheme.headline1,
                       ),
                       SizedBox(
                         width: 8,
@@ -169,12 +154,7 @@ class Heading extends StatelessWidget {
                       isStudent
                           ? mapStudent[headingName]['description']
                           : mapEmployer[headingName]['description'],
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black87,
-                      ),
+                      style: Theme.of(context).textTheme.headline2,
                     ),
                   ),
                 ],

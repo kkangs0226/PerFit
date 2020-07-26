@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:perfit_app/screens/company_student_screens/company_details_screen.dart';
 import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
+import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 
-import '../../dummy_data.dart';
-import '../../models/company.dart';
+//import '../../dummy_data.dart';
+//import '../../models/company.dart';
+//import '../../models/student.dart';
+import '../../providers/offers.dart';
 import '../../models/student.dart';
+import '../../models/company.dart';
+import '../../providers/companies_list.dart';
+import '../../providers/students_list.dart';
 
 class OfferWidget extends StatelessWidget {
-  final int index;
   final bool isStudent;
 
   //final List<Student> offeredStudents;
 
   //OfferWidget(this.offeredStudents);
 
-  OfferWidget(this.index, this.isStudent);
-
-  List<Company> listCompanies = DummyData.DUMMY_COMPANIES;
-  List<Student> listStudents = DummyData.DUMMY_STUDENTS;
+  OfferWidget(this.isStudent);
 
   @override
   Widget build(BuildContext context) {
-    final studentName = listStudents[index].name;
-    final companyId = listCompanies[index].name;
+    final company = isStudent ? null : Provider.of<Company>(context);
+    final student = isStudent ? Provider.of<Student>(context) : null;
+
     return GestureDetector(
       onTap: () => isStudent
           ? Navigator.of(context)
-              .pushNamed(CompanyDetailsScreen.routeName, arguments: companyId)
-          : Navigator.of(context).pushNamed(StudentDetailsScreen.routeName,
-              arguments: studentName),
+              .pushNamed(CompanyDetailsScreen.routeName, arguments: company.id)
+          : Navigator.of(context).pushNamed(
+              StudentDetailsScreen.routeName,
+              arguments: student.name,
+            ),
       child: Container(
         //height: 150,
         child: Card(
@@ -57,7 +63,7 @@ class OfferWidget extends StatelessWidget {
                           color: Colors.white,
                         ),
                         child: Image.asset(
-                          listCompanies[index].logoURL,
+                          company.logoURL,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -74,7 +80,7 @@ class OfferWidget extends StatelessWidget {
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          listStudents[index].profileURL,
+                          student.profileURL,
                           height: 75,
                           width: 75,
                           fit: BoxFit.cover,
@@ -95,9 +101,7 @@ class OfferWidget extends StatelessWidget {
                         height: 20,
                         width: 140,
                         child: Text(
-                          isStudent
-                              ? listCompanies[index].name
-                              : listStudents[index].name,
+                          isStudent ? company.name : student.name,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -118,50 +122,34 @@ class OfferWidget extends StatelessWidget {
                             Container(
                               child: Text(
                                 isStudent
-                                    ? 'Industry: ${listCompanies[index].industry}'
-                                    : 'Course: ${listStudents[index].course}',
+                                    ? 'Industry: ${company.industry}'
+                                    : 'Course: ${student.course}',
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 10,
-                                ),
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                             ),
                             Container(
                               child: Text(
                                 isStudent
-                                    ? 'Founder Name: ${listCompanies[index].founderName}'
-                                    : 'School: ${listStudents[index].school}',
+                                    ? 'Founder Name: ${company.founderName}'
+                                    : 'School: ${student.school}',
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 10,
-                                ),
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                             ),
                             Text(
                               'Job Offered: Software Engineer Intern}',
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 10,
-                              ),
+                              style: Theme.of(context).textTheme.headline5,
                             ),
                             Text(
-                              'Date Offered: ${listCompanies[index].joinedDate}',
+                              'Date Offered: ${company.joinedDate}',
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 10,
-                              ),
+                              style: Theme.of(context).textTheme.headline5,
                             )
                           ],
                         ),

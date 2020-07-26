@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Student {
+class Student with ChangeNotifier {
   final String name;
   final String school;
   final String course;
@@ -10,6 +10,7 @@ class Student {
   final int age;
   final String personalStatement;
   final String resumeURL;
+  bool gaveOffer;
 
   Student(
       {this.course,
@@ -20,5 +21,11 @@ class Student {
       this.year,
       this.age,
       this.personalStatement,
+      this.gaveOffer,
       this.resumeURL});
+
+  void toggleOffer() {
+    gaveOffer = !gaveOffer;
+    notifyListeners();
+  }
 }

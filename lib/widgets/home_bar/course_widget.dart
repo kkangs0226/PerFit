@@ -93,12 +93,7 @@ class CourseWidget extends StatelessWidget {
               width: 150,
               child: Text(
                 map[courseId]['description'],
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                ),
+                style: Theme.of(context).textTheme.headline2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

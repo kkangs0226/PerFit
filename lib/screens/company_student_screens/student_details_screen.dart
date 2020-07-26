@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:perfit_app/dummy_data.dart';
+//import 'package:perfit_app/providers/students_list.dart';
+//import 'package:perfit_app/dummy_data.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/student.dart';
+import '../../providers/offers.dart';
 
 class StudentDetailsScreen extends StatelessWidget {
   static const routeName = './student_details_screen';
 
-  final Function toggleOffer;
+  /*final Function toggleOffer;
   final Function gaveOffer;
+  
 
   StudentDetailsScreen(this.toggleOffer, this.gaveOffer);
+  */
 
   @override
   Widget build(BuildContext context) {
-    final studentName = ModalRoute.of(context).settings.arguments as String;
-    final selectedStudent = DummyData.DUMMY_STUDENTS
-        .firstWhere((student) => student.name == studentName);
+    //final studentName = ModalRoute.of(context).settings.arguments as String;
+    final selectedStudent = Provider.of<Student>(context, listen: false);
+    final offerList = Provider.of<Offers>(context, listen: false);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -48,9 +55,6 @@ class StudentDetailsScreen extends StatelessWidget {
                 ),
                 Container(
                   width: mediaQueryData.size.width * 0.6,
-                  //height: mediaQueryData.size.height * 0.5,
-                  //width: 100,
-                  //margin: EdgeInsets.all(0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -91,32 +95,20 @@ class StudentDetailsScreen extends StatelessWidget {
                                 //'Name: djklajfdklfjlasdjfklasjf',
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: Theme.of(context).textTheme.bodyText1,
                               ),
                             ),
                             Text(
                               'Age: ${selectedStudent.age}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             Text(
                               'Year: ${selectedStudent.year}',
                               //'Name: djklajfdklfjlasdjfklasjf',
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                              ),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ],
                         ),
@@ -189,12 +181,46 @@ class StudentDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(
-              gaveOffer(studentName) ? Icons.check : Icons.accessibility_new,
-              color: Theme.of(context).accentColor),
-          onPressed: () => toggleOffer(studentName)),
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(
+                selectedStudent.gaveOffer
+                    ? Icons.check
+                    : Icons.accessibility_new,
+                color: Theme.of(context).accentColor),
+            onPressed: () {
+              selectedStudent.toggleOffer();
+              if (selectedStudent.gaveOffer) {
+                offerList.addOfferStudent(
+                    selectedStudent.name, selectedStudent.name);
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text('You gave an offer to ${selectedStudent.name}!'),
+                    duration: Duration(
+                      seconds: 2,
+                    ),
+                  ),
+                );
+              } else {
+                offerList.cancelOfferStudent(selectedStudent.name);
+                Scaffold.of(context).hideCurrentSnackBar();
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        'You cancelled your offer to ${selectedStudent.name}!'),
+                    duration: Duration(
+                      seconds: 2,
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        },
+      ),
     );
   }
 }

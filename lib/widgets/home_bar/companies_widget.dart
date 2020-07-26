@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'package:perfit_app/dummy_data.dart';
+//import 'package:perfit_app/dummy_data.dart';
 
 import '../../screens/company_student_screens/company_details_screen.dart';
 import '../../models/company.dart';
+import '../../providers/companies_list.dart';
 
 class CompanyWidget extends StatelessWidget {
-  final int index;
+  /*final String id;
 
-  CompanyWidget(this.index);
-
-  List<Company> listCompanies = DummyData.DUMMY_COMPANIES;
+  CompanyWidget(this.id);
+  */
 
   @override
   Widget build(BuildContext context) {
-    String companyId = listCompanies[index].id;
+    Company company = Provider.of<Company>(context);
 
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        CompanyDetailsScreen.routeName, arguments: companyId,
+        CompanyDetailsScreen.routeName, arguments: company.id,
         //arguments: companyId,
       ),
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.all(10),
+            margin: EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 17,
+            ),
             padding: EdgeInsets.all(3),
             height: 80,
             width: 80,
@@ -40,7 +44,7 @@ class CompanyWidget extends StatelessWidget {
                 color: Colors.white,
               ),
               child: Image.asset(
-                listCompanies[index].logoURL,
+                company.logoURL,
                 fit: BoxFit.contain,
               ),
             ),
@@ -53,12 +57,9 @@ class CompanyWidget extends StatelessWidget {
               horizontal: 10,
             ),
             child: Text(
-              listCompanies[index].name,
+              company.name,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w400,
-              ),
+              style: Theme.of(context).textTheme.headline3,
             ),
           ),
         ],

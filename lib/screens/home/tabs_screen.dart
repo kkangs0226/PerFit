@@ -48,21 +48,11 @@ class _TabsScreenState extends State<TabsScreen> {
           children: <Widget>[
             Text(
               _pages[_selectedPageIndex]['title'],
-              style: TextStyle(
-                fontSize: 25,
-                fontFamily: 'Pacifico',
-              ),
+              style: Theme.of(context).textTheme.headline6,
             ),
             SizedBox(
               width: 15,
             ),
-            /*Container(
-              height: 18,
-              width: 220,
-              alignment: Alignment.center,
-              color: Colors.white,
-            ),
-            */
           ],
         ),
       ),
@@ -76,11 +66,7 @@ class _TabsScreenState extends State<TabsScreen> {
         alignment: Alignment.center,
         child: Text(
           _pages[_selectedPageIndex]['title'],
-          style: TextStyle(
-            fontSize: 25,
-            fontFamily: 'Monsterrat',
-            fontWeight: FontWeight.w300,
-          ),
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
     );
@@ -100,23 +86,24 @@ class _TabsScreenState extends State<TabsScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Home'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.filter_list),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Filter'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.forum),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Forum'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Chat'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Profile'),
+            //title: Padding(padding: EdgeInsets.all(0)),
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:perfit_app/dummy_data.dart';
 
@@ -6,22 +7,21 @@ import '../../screens/company_student_screens/student_details_screen.dart';
 import '../../models/student.dart';
 
 class StudentWidget extends StatelessWidget {
-  final int index;
+  /*final Student student;
 
-  StudentWidget(this.index);
-
-  List<Student> listStudents = DummyData.DUMMY_STUDENTS;
+  StudentWidget(this.student);
+  */
 
   @override
   Widget build(BuildContext context) {
     //Widget _buildText(String)
 
-    final studentName = listStudents[index].name;
+    final student = Provider.of<Student>(context, listen: false);
 
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
         StudentDetailsScreen.routeName,
-        arguments: studentName,
+        arguments: student.name,
         //arguments: companyId,
       ),
       child: Column(
@@ -39,7 +39,7 @@ class StudentWidget extends StatelessWidget {
             ),
             child: ClipOval(
               child: Image.asset(
-                listStudents[index].profileURL,
+                student.profileURL,
                 height: 100,
                 width: 100,
                 fit: BoxFit.cover,
@@ -57,34 +57,22 @@ class StudentWidget extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Text(
-                  '${listStudents[index].name}',
+                  '${student.name}',
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(context).textTheme.headline3,
                 ),
                 Text(
-                  'Course: ${listStudents[index].course}',
+                  'Course: ${student.course}',
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: Theme.of(context).textTheme.headline4,
                 ),
                 Text(
-                  'School: ${listStudents[index].school}',
+                  'School: ${student.school}',
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: Theme.of(context).textTheme.headline4,
                 ),
               ],
-              //Text('Course: ${listStudents[index].course}')
+              //Text('Course: ${student.course}')
             ),
           ),
         ],
