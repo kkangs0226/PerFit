@@ -25,46 +25,18 @@ import '../../../widgets/loading.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home_screen';
+  final bool isEmployer;
+  final FirebaseUser currentUser;
+
+  HomeScreen(this.isEmployer, this.currentUser);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isEmployer;
-  bool _isLoading = false;
-  FirebaseUser currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkIfEmployer();
-  }
-
-  Future<void> _checkIfEmployer() async {
-    DocumentSnapshot result;
-    setState(() {
-      _isLoading = true;
-    });
-    currentUser = await FirebaseAuth.instance.currentUser();
-    result = await Firestore.instance
-        .collection('employers')
-        .document(currentUser.uid)
-        .get();
-    if (result.exists) {
-      isEmployer = true;
-      print('success');
-    } else {
-      isEmployer = false;
-      print('failure');
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
   //List<Map<String, String>> _courseName = [];
-
-  bool isStudent = true;
+  bool isStudent = false;
 
   Widget _buildHoriScroll(List<Widget> widgetList) {
     return Container(
@@ -178,69 +150,62 @@ class _HomeScreenState extends State<HomeScreen> {
         isStudent
             ? _companyListBuilder(companiesList.favouriteCompanies)
             : _studentListBuilder(studentsList.LIST_STUDENTS),
-
-        
         SizedBox(
           height: 25,
         ),
-        _isLoading
-            ? Loading()
-            : StreamBuilder<QuerySnapshot>(
-                stream: isEmployer
-                    ? Firestore.instance.collection('students').snapshots()
-                    : Firestore.instance.collection('employers').snapshots(),
-                builder: (ctx, snapshots) {
-                  if (snapshots.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  print(snapshots.data.documents.length);
-                  return Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 50,
-                    ),
-                    height: snapshots.data.documents.length * 100.0,
-                    child: ListView.builder(
-                      itemCount: snapshots.data.documents.length,
-                      itemBuilder: (ctx, index) {
-                        return Column(
-                          children: [
-                            Text(snapshots.data.documents[index]['name']),
-                            RaisedButton.icon(
-                              onPressed: () {
-                                // print(snapshots.data.documents[index]
-                                //     ['profile_image']);
-                                String imageUrl = !isEmployer
-                                    ? snapshots.data.documents[index]['logo']
-                                    : snapshots.data.documents[index]
-                                        ['profile_image'];
-                                Navigator.of(context).pushNamed(
-                                  ChatScreen.routeName,
-                                  arguments: Chat(
-                                    snapshots.data.documents[index].documentID,
-                                    snapshots.data.documents[index]['name'],
-                                    isEmployer,
-                                    imageUrl,
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.send),
-                              label: Text('send'),
+        StreamBuilder<QuerySnapshot>(
+          stream: widget.isEmployer
+              ? Firestore.instance.collection('students').snapshots()
+              : Firestore.instance.collection('employers').snapshots(),
+          builder: (ctx, snapshots) {
+            if (snapshots.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            print(snapshots.data.documents.length);
+            return Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: 50,
+              ),
+              height: snapshots.data.documents.length * 100.0,
+              child: ListView.builder(
+                itemCount: snapshots.data.documents.length,
+                itemBuilder: (ctx, index) {
+                  return Column(
+                    children: [
+                      Text(snapshots.data.documents[index]['name']),
+                      RaisedButton.icon(
+                        onPressed: () {
+                          // print(snapshots.data.documents[index]
+                          //     ['profile_image']);
+                          String imageUrl = !widget.isEmployer
+                              ? snapshots.data.documents[index]['logo']
+                              : snapshots.data.documents[index]
+                                  ['profile_image'];
+                          Navigator.of(context).pushNamed(
+                            ChatScreen.routeName,
+                            arguments: Chat(
+                              snapshots.data.documents[index].documentID,
+                              snapshots.data.documents[index]['name'],
+                              widget.isEmployer,
+                              imageUrl,
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            
-
-                          ],
-                        );
-                      },
-                    ),
+                          );
+                        },
+                        icon: Icon(Icons.send),
+                        label: Text('send'),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   );
                 },
               ),
-              
+            );
+          },
+        ),
       ],
     );
   }

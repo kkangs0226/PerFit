@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'chat_bar/chat_list_screen.dart';
 import './filter_bar/filter_screen.dart';
 import './forum_bar/forum_screen.dart';
 import './home_bar/home_screen.dart';
 import './profile_bar/user_profile_screen.dart';
-import '../../services/auth.dart';
+import '../../widgets/loading.dart';
 
 class TabsScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
@@ -14,25 +16,44 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  List<Map<String, Object>> _pages;
+  bool isEmployer;
+  FirebaseUser currentUser;
+  bool _isLoading;
   var _selectedPageIndex = 0;
-  final AuthService _auth = AuthService();
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
-    _pages = [
-      {'page': HomeScreen(), 'title': 'PerFit!'},
-      {'page': FilterScreen(), 'title': 'Filter'},
-      {'page': ForumScreen(), 'title': 'Forum'},
-      {'page': ChatListScreen(), 'title': 'Chat Lists'},
-      {'page': UserProfileScreen(), 'title': 'User Profile'},
-    ];
     super.initState();
+    _checkIfEmployer();
+  }
+
+  Future<void> _checkIfEmployer() async {
+    DocumentSnapshot result;
+    setState(() {
+      _isLoading = true;
+    });
+    currentUser = await FirebaseAuth.instance.currentUser();
+    result = await Firestore.instance
+        .collection('employers')
+        .document(currentUser.uid)
+        .get();
+    if (result.exists) {
+      isEmployer = true;
+      print('success');
+    } else {
+      isEmployer = false;
+      print('failure');
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _selectPage(int index) {
     setState(
       () {
+        print(isEmployer);
         _selectedPageIndex = index;
       },
     );
@@ -40,7 +61,24 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, Object>> _pages = [
+      {'page': HomeScreen(isEmployer, currentUser), 'title': 'PerFit!'},
+      {'page': FilterScreen(isEmployer, currentUser), 'title': 'Filter'},
+      {'page': ForumScreen(isEmployer, currentUser), 'title': 'Forum'},
+      {'page': ChatListScreen(isEmployer, currentUser), 'title': 'Chat Lists'},
+      {
+        'page': UserProfileScreen(isEmployer, currentUser),
+        'title': 'User Profile'
+      },
+    ];
+
     final PreferredSizeWidget mainAppBar = AppBar(
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.arrow_left),
+          onPressed: () => _auth.signOut(),
+        )
+      ],
       title: Container(
         padding: EdgeInsets.symmetric(
           vertical: 20,
@@ -61,6 +99,12 @@ class _TabsScreenState extends State<TabsScreen> {
     );
 
     final PreferredSizeWidget appBar = AppBar(
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.arrow_left),
+          onPressed: () => _auth.signOut(),
+        )
+      ],
       title: Container(
         padding: EdgeInsets.symmetric(
           vertical: 20,
@@ -85,7 +129,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
     return Scaffold(
       appBar: _selectedPageIndex == 0 ? mainAppBar : appBar,
-      body: _pages[_selectedPageIndex]['page'],
+      body: _isLoading ? Loading() : _pages[_selectedPageIndex]['page'],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
         showSelectedLabels: false,
