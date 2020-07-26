@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/textfield.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   static const routeName = '/forgotPasswordPage';
@@ -14,54 +15,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildTextField({
-      @required marginRight,
-      @required obscure,
-      @required enableText,
-      @required function,
-      key,
-      validator,
-      marginLeft = 30.0,
-      labelText = '',
-      textInputType = TextInputType.text,
-      maxLines = 1,
-    }) {
-      return Container(
-        margin: EdgeInsets.only(left: marginLeft, right: marginRight),
-        child: TextFormField(
-          readOnly: !enableText,
-          obscureText: obscure,
-          maxLines: maxLines,
-          keyboardType: textInputType,
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: TextStyle(
-              color: Theme.of(context).primaryColor,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-          ),
-          onChanged: function,
-          validator: validator,
-          key: key,
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -85,7 +38,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           SizedBox(height: 30),
           Form(
             key: _formKey,
-            child: _buildTextField(
+            child: CustomTextField(
+              initValue: _email,
               marginRight: 100.0,
               labelText: 'Email',
               obscure: false,

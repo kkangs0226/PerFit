@@ -9,7 +9,6 @@ class TextFieldHeader extends StatelessWidget {
 
   final BuildContext context;
   final String header;
-
   @override
   Widget build(BuildContext context) {
     return Container(

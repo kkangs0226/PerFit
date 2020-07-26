@@ -6,17 +6,17 @@ import 'package:perfit_app/providers/students_list.dart';
 import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/offer_status_employer_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/offer_status_student_screen.dart';
+import 'package:perfit_app/screens/home/chat_bar/chat_screen.dart';
+import 'package:perfit_app/screens/home/home_bar/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import './screens/authenticate/forgot_password_screen.dart';
 import './screens/authenticate/registration/student_registration/student_registration_screen.dart';
 import './screens/authenticate/login_screen.dart';
-import './screens/authenticate/registration/successful_registration_screen.dart';
 import './screens/authenticate/registration/employer_registration/employer_registration_screen.dart';
 import './screens/authenticate/registration/employer_registration/add_job_screen.dart';
 import './services/auth.dart';
 import './models/user.dart';
-import './screens/wrapper.dart';
 import 'screens/home/home_bar/course_job_screen.dart';
 import 'screens/home/home_bar/course_student_screen.dart';
 import 'screens/home/favourites_bar/favourited_students_screen.dart';
@@ -27,6 +27,7 @@ import './screens/home/home_bar/new_companies_screen.dart';
 import './screens/home/tabs_screen.dart';
 import './models/student.dart';
 import './models/company.dart';
+import './wrapper.dart';
 
 void main() {
   runApp(MyApp());
@@ -100,7 +101,7 @@ class _MyAppState extends State<MyApp> {
         value: AuthService().user,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'Perfit',
           theme: ThemeData(
             primarySwatch: Colors.blue,
             accentColor: Colors.white,
@@ -154,7 +155,7 @@ class _MyAppState extends State<MyApp> {
                 ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          initialRoute: Wrapper.routeName,
+          home: Wrapper(),
           routes: {
             TabsScreen.routeName: (ctx) => TabsScreen(),
             LoginScreen.routeName: (ctx) => LoginScreen(),
@@ -162,7 +163,6 @@ class _MyAppState extends State<MyApp> {
                 StudentRegistrationPage(),
             EmployerRegistrationPage.routeName: (ctx) =>
                 EmployerRegistrationPage(),
-            SuccessfulRegistration.routeName: (ctx) => SuccessfulRegistration(),
             ForgotPasswordPage.routeName: (ctx) => ForgotPasswordPage(),
             AddJobPage.routeName: (ctx) => AddJobPage(),
             Wrapper.routeName: (ctx) => Wrapper(),
@@ -179,6 +179,8 @@ class _MyAppState extends State<MyApp> {
             OfferStatusStudentScreen.routeName: (ctx) =>
                 OfferStatusEmployerScreen(),
             StudentDetailsScreen.routeName: (ctx) => StudentDetailsScreen(),
+            ChatScreen.routeName: (ctx) => ChatScreen(),
+            HomeScreen.routeName: (ctx) => HomeScreen(),
           },
         ),
       ),

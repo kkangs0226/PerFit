@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 
+import './textfield.dart';
+
 class DynamicField extends StatefulWidget {
   final String labelText;
   final Function deleteField;
   final List list;
   final String id;
   final dynamic item;
+  final Function function;
+  final bool enableText;
 
   const DynamicField({
+    @required this.function,
     @required this.item,
-    @required Key key,
+    Key key,
     @required this.labelText,
     @required this.id,
     @required this.deleteField,
     @required this.list,
+    this.enableText = true,
   }) : super(key: key);
 
   @override
@@ -21,57 +27,20 @@ class DynamicField extends StatefulWidget {
 }
 
 class _DynamicFieldState extends State<DynamicField> {
-  Widget _buildTextField({
-    @required marginRight,
-    @required obscure,
-    @required enableText,
-    @required function,
-    marginLeft = 30.0,
-    labelText = '',
-    textInputType = TextInputType.text,
-    maxLines = 1,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(left: marginLeft, right: marginRight),
-      child: TextFormField(
-        readOnly: !enableText,
-        obscureText: obscure,
-        maxLines: maxLines,
-        keyboardType: textInputType,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: TextStyle(
-            color: Theme.of(context).primaryColor,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-        ),
-        onChanged: function,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Stack(
           children: <Widget>[
-            _buildTextField(
+            CustomTextField(
+              initValue: widget.item,
               labelText: widget.labelText,
               marginRight: 50.0,
               marginLeft: 0.0,
               obscure: false,
-              enableText: true,
-              function: (val) {
-                this.widget.item.update(val);
-              },
+              enableText: widget.enableText,
+              function: widget.function,
             ),
             Positioned(
               right: 0,

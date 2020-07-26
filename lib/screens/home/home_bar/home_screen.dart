@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:perfit_app/models/company.dart';
@@ -14,6 +16,16 @@ import '../../../providers/companies_list.dart';
 import '../../../providers/students_list.dart';
 import '../../../models/student.dart';
 //import '../../../models/';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:perfit_app/screens/company_student_screens/company_details_screen.dart';
+import './course_job_screen.dart';
+import './new_companies_screen.dart';
+import '../favourites_bar/favourites_companies_screen.dart';
+import '../chat_bar/chat_screen.dart';
+import '../../../models/chat.dart';
+import '../../../widgets/loading.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home_screen';
@@ -23,6 +35,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isEmployer;
+  bool _isLoading = false;
+  FirebaseUser currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfEmployer();
+  }
+
+  Future<void> _checkIfEmployer() async {
+    DocumentSnapshot result;
+    setState(() {
+      _isLoading = true;
+    });
+    currentUser = await FirebaseAuth.instance.currentUser();
+    result = await Firestore.instance
+        .collection('employers')
+        .document(currentUser.uid)
+        .get();
+    if (result.exists) {
+      isEmployer = true;
+      print('success');
+    } else {
+      isEmployer = false;
+      print('failure');
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
   //List<Map<String, String>> _courseName = [];
 
   bool isStudent = true;
@@ -138,22 +181,70 @@ class _HomeScreenState extends State<HomeScreen> {
         Heading('FAVOURITES', isStudent),
         isStudent
             ? _companyListBuilder(companiesList.favouriteCompanies)
-            : _studentListBuilder(studentsList.LIST_STUDENTS)
+            : _studentListBuilder(studentsList.LIST_STUDENTS),
 
-        /*Container(
-          //height: constraints.maxHeight * 0.15,
-          padding: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _buildCompanyWidget(context, 'abc'),
-              _buildCompanyWidget(context, 'apple'),
-              _buildCompanyWidget(context, 'pear'),
-              _buildCompanyWidget(context, 'melon'),
-            ],
-          ),
+        /*
+        SizedBox(
+          height: 25,
         ),
-        */
+        _isLoading
+            ? Loading()
+            : StreamBuilder<QuerySnapshot>(
+                stream: isEmployer
+                    ? Firestore.instance.collection('students').snapshots()
+                    : Firestore.instance.collection('employers').snapshots(),
+                builder: (ctx, snapshots) {
+                  if (snapshots.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  print(snapshots.data.documents.length);
+                  return Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 50,
+                    ),
+                    height: snapshots.data.documents.length * 100.0,
+                    child: ListView.builder(
+                      itemCount: snapshots.data.documents.length,
+                      itemBuilder: (ctx, index) {
+                        return Column(
+                          children: [
+                            Text(snapshots.data.documents[index]['name']),
+                            RaisedButton.icon(
+                              onPressed: () {
+                                // print(snapshots.data.documents[index]
+                                //     ['profile_image']);
+                                String imageUrl = !isEmployer
+                                    ? snapshots.data.documents[index]['logo']
+                                    : snapshots.data.documents[index]
+                                        ['profile_image'];
+                                Navigator.of(context).pushNamed(
+                                  ChatScreen.routeName,
+                                  arguments: Chat(
+                                    snapshots.data.documents[index].documentID,
+                                    snapshots.data.documents[index]['name'],
+                                    isEmployer,
+                                    imageUrl,
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.send),
+                              label: Text('send'),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            
+
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              */
       ],
     );
   }
