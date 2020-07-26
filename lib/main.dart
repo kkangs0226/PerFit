@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Wrapper(),
+        
         routes: {
           TabsScreen.routeName: (ctx) => TabsScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
