@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './registration/employer_registration/employer_registration_screen.dart';
 import './registration/student_registration/student_registration_screen.dart';
@@ -19,16 +20,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
-  bool _failedLogin = false;
   bool _loading = false;
 
   Widget _buildLoginField({
     String hintText,
     bool obscure,
     BuildContext context,
-    Function validator,
     Function function,
     String initValue,
+    TextInputType textInputType = TextInputType.text,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 70.0),
@@ -51,8 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           errorStyle: TextStyle(color: Colors.red[900]),
         ),
-        validator: validator,
         onChanged: function,
+        keyboardType: textInputType,
       ),
     );
   }
@@ -95,146 +95,162 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? Loading()
-        : Scaffold(
-            backgroundColor: Theme.of(context).primaryColorDark,
-            body: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 60,
-                  ),
-                  Center(
-                    child: Text(
-                      'PerFit!',
-                      style: Theme.of(context).textTheme.headline1.copyWith(
-                            fontSize: 45,
-                            color: Theme.of(context).accentColor,
-                          ),
-                    ),
-                  ),
-                  SizedBox(height: 25),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        _buildLoginField(
-                          initValue: _email,
-                          hintText: 'email',
-                          context: context,
-                          obscure: false,
-                          function: (val) {
-                            setState(() {
-                              _email = val;
-                              print(_email);
-                            });
-                          },
-                        ),
-                        SizedBox(height: 15),
-                        Stack(
-                          children: [
-                            _buildLoginField(
-                              initValue: _password,
-                              hintText: 'password',
-                              context: context,
-                              obscure: true,
-                              function: (val) {
-                                setState(() {
-                                  _password = val;
-                                  print(_password);
-                                });
-                              },
-                            ),
-                            Positioned(
-                              right: 70,
-                              child: IconButton(
-                                icon: Icon(Icons.arrow_forward),
-                                color: Theme.of(context).primaryColor,
-                                onPressed: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    setState(() {
-                                      _loading = true;
-                                    });
-                                    dynamic result =
-                                        await _auth.signInWithEmailAndPassword(
-                                            _email, _password);
-                                    print('signing in');
-                                    if (result == null) {
-                                      setState(() {
-                                        _loading = false;
-                                        _failedLogin = true;
-                                      });
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (_failedLogin)
-                    SizedBox(
-                      height: 30,
-                      child: Center(
-                        child: Text(
-                          'Please enter a valid email/password',
-                          style: TextStyle(color: Colors.red[700]),
-                        ),
-                      ),
-                    ),
-                  SizedBox(
-                    height: 25,
-                    child: FlatButton(
-                      child: Text(
-                        'Forgot password?',
-                        style: TextStyle(
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).primaryColorDark,
+        body: Builder(
+          builder: (ctx) => SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 60,
+                ),
+                Center(
+                  child: Text(
+                    'PerFit!',
+                    style: Theme.of(context).textTheme.headline1.copyWith(
+                          fontSize: 45,
                           color: Theme.of(context).accentColor,
-                          decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(ForgotPasswordPage.routeName);
-                      },
-                    ),
                   ),
-                  SizedBox(height: 30),
-                  Center(
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          'Not a member yet?',
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Let\'s explore',
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
-                        ),
-                        SizedBox(height: 15),
-                        _buildNavigationHomepageButton(
-                          context,
-                          'Student',
-                          () async {
-                            setState(() {
-                              _loading = true;
-                            });
-                            await Navigator.of(context)
-                                .pushNamed(TabsScreen.routeName);
-                            setState(() {
-                              _loading = false;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 15),
-                        _buildNavigationHomepageButton(context, 'Employer',
-                            () async {
+                ),
+                SizedBox(height: 25),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _buildLoginField(
+                        initValue: _email,
+                        hintText: 'email',
+                        context: context,
+                        obscure: false,
+                        textInputType: TextInputType.emailAddress,
+                        function: (val) {
+                          setState(() {
+                            _email = val;
+                            print(_email);
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      Stack(
+                        children: [
+                          _buildLoginField(
+                            initValue: _password,
+                            hintText: 'password',
+                            context: context,
+                            obscure: true,
+                            function: (val) {
+                              setState(() {
+                                _password = val;
+                                print(_password);
+                              });
+                            },
+                          ),
+                          Positioned(
+                            right: 30,
+                            child: _loading
+                                ? CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                  )
+                                : IconButton(
+                                    icon: Icon(Icons.arrow_forward),
+                                    color: Theme.of(context).accentColor,
+                                    onPressed: () async {
+                                      if (_formKey.currentState.validate()) {
+                                        setState(() {
+                                          _loading = true;
+                                        });
+                                        try {
+                                          await _auth
+                                              .signInWithEmailAndPassword(
+                                                  _email, _password);
+                                          print('signing in');
+                                        } catch (error) {
+                                          setState(
+                                            () {
+                                              _loading = false;
+                                            },
+                                          );
+                                          var errorMessage =
+                                              'Please key in proper credentials.';
+                                          print(error.toString());
+                                          if (error.toString().contains(
+                                              'ERROR_INVALID_EMAIL')) {
+                                            errorMessage = 'Invalid email.';
+                                          }
+                                          if (error.toString().contains(
+                                              'ERROR_USER_NOT_FOUND')) {
+                                            errorMessage = 'User not found.';
+                                          }
+                                          if (error.toString().contains(
+                                              'ERROR_WRONG_PASSWORD')) {
+                                            errorMessage =
+                                                'Incorrect password.';
+                                          }
+                                          Scaffold.of(ctx).showSnackBar(
+                                            SnackBar(
+                                              content: Text(errorMessage),
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    },
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                  child: FlatButton(
+                    child: Text(
+                      'Forgot password?',
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(() {
+                        _loading = true;
+                      });
+                      await Navigator.of(context)
+                          .pushNamed(ForgotPasswordPage.routeName);
+                      setState(() {
+                        _loading = false;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(height: 30),
+                Center(
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Not a member yet?',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Let\'s explore',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
+                      SizedBox(height: 15),
+                      _buildNavigationHomepageButton(
+                        context,
+                        'Student',
+                        () async {
                           setState(() {
                             _loading = true;
                           });
@@ -243,50 +259,46 @@ class _LoginScreenState extends State<LoginScreen> {
                           setState(() {
                             _loading = false;
                           });
-                        }),
-                        SizedBox(height: 25),
-                        Text(
-                          'or',
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        _buildNavigateRegistrationButton(
-                            context, 'create student account', () async {
-                          setState(() {
-                            _loading = true;
-                          });
-                          await Navigator.of(context)
-                              .pushNamed(StudentRegistrationPage.routeName);
-                          setState(() {
-                            _failedLogin = false;
-                          });
-                          setState(() {
-                            _loading = false;
-                          });
-                        }),
-                        _buildNavigateRegistrationButton(
-                            context, 'create employer account', () async {
-                          setState(() {
-                            _loading = true;
-                          });
-                          await Navigator.of(context)
-                              .pushNamed(EmployerRegistrationPage.routeName);
-                          setState(() {
-                            _failedLogin = false;
-                          });
-                          setState(() {
-                            _loading = false;
-                          });
-                        }),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      _buildNavigationHomepageButton(context, 'Employer',
+                          () async {
+                        setState(() {
+                          _loading = true;
+                        });
+                        await Navigator.of(context)
+                            .pushNamed(TabsScreen.routeName);
+                        setState(() {
+                          _loading = false;
+                        });
+                      }),
+                      SizedBox(height: 25),
+                      Text(
+                        'or',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildNavigateRegistrationButton(
+                          context, 'create student account', () {
+                        Navigator.of(context)
+                            .pushNamed(StudentRegistrationPage.routeName);
+                      }),
+                      _buildNavigateRegistrationButton(
+                          context, 'create employer account', () {
+                        Navigator.of(context)
+                            .pushNamed(EmployerRegistrationPage.routeName);
+                      }),
+                    ],
+                  ),
+                )
+              ],
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }

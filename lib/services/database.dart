@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseService {
   final String uid;
@@ -25,7 +28,27 @@ class DatabaseService {
     List pastProj,
     List workExp,
     String shortDesc,
+    File image,
+    File cv,
   }) async {
+    var imageUrl = '';
+    var cvUrl = '';
+    if (image != null) {
+      var ref = FirebaseStorage.instance
+          .ref()
+          .child('student_images')
+          .child(uid + '.jpg');
+      await ref.putFile(image).onComplete;
+      imageUrl = await ref.getDownloadURL();
+    }
+    if (cv != null) {
+      var ref = FirebaseStorage.instance
+          .ref()
+          .child('student_cv')
+          .child(uid + '.docx');
+      await ref.putFile(cv).onComplete;
+      cvUrl = await ref.getDownloadURL();
+    }
     return await studentDataCollection.document(uid).setData({
       'name': name,
       'date_of_birth': dateOfBirth,
@@ -41,6 +64,8 @@ class DatabaseService {
       'past_projects': pastProj,
       'work_experiences': workExp,
       'short_description': shortDesc,
+      'profile_image': imageUrl,
+      'cv': cvUrl,
     });
   }
 
@@ -57,7 +82,27 @@ class DatabaseService {
     String internsGain,
     List jobs,
     List pastProj,
+    File logo,
+    File employerProfile,
   }) async {
+    var imageUrl = '';
+    var profileUrl = '';
+    if (logo != null) {
+      var ref = FirebaseStorage.instance
+          .ref()
+          .child('company_logos')
+          .child(uid + '.jpg');
+      await ref.putFile(logo).onComplete;
+      imageUrl = await ref.getDownloadURL();
+    }
+    if (employerProfile != null) {
+      var ref = FirebaseStorage.instance
+          .ref()
+          .child('employer_profile')
+          .child(uid + '.docx');
+      await ref.putFile(employerProfile).onComplete;
+      profileUrl = await ref.getDownloadURL();
+    }
     return await employerDataCollection.document(uid).setData(
       {
         'name': name,
@@ -71,6 +116,8 @@ class DatabaseService {
         'benefits_for_interns': internsGain,
         'jobs_for_interns': jobs,
         'past_projects': pastProj,
+        'logo': imageUrl,
+        'employer_profile': profileUrl,
       },
     );
   }

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:perfit_app/services/database.dart';
 
 import '../models/user.dart';
@@ -38,7 +41,7 @@ class AuthService {
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
-      return null;
+      throw Exception(e);
     }
   }
 
@@ -71,6 +74,10 @@ class AuthService {
     List workExp,
     List jobsForInterns,
     String shortDesc,
+    File profileImage,
+    File cvFile,
+    File logo,
+    File employerProfile,
   }) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
@@ -92,6 +99,8 @@ class AuthService {
           school: school,
           specialisation: spec,
           yearOfStudy: yearOfStudy,
+          image: profileImage,
+          cv: cvFile,
         );
       } else {
         await DatabaseService(uid: user.uid).updateEmployerData(
@@ -107,12 +116,14 @@ class AuthService {
           internsGain: internsGain,
           jobs: jobsForInterns,
           pastProj: pastProj,
+          logo: logo,
+          employerProfile: employerProfile,
         );
       }
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
-      return null;
+      throw Exception(e);
     }
   }
 

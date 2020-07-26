@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './chat_bar/chat_screen.dart';
+import 'chat_bar/chat_list_screen.dart';
 import './filter_bar/filter_screen.dart';
 import './forum_bar/forum_screen.dart';
 import './home_bar/home_screen.dart';
@@ -24,7 +24,7 @@ class _TabsScreenState extends State<TabsScreen> {
       {'page': HomeScreen(), 'title': 'PerFit!'},
       {'page': FilterScreen(), 'title': 'Filter'},
       {'page': ForumScreen(), 'title': 'Forum'},
-      {'page': ChatScreen(), 'title': 'Chat Lists'},
+      {'page': ChatListScreen(), 'title': 'Chat Lists'},
       {'page': UserProfileScreen(), 'title': 'User Profile'},
     ];
     super.initState();

@@ -60,6 +60,7 @@ class CustomTextField extends StatelessWidget {
         onChanged: function,
         validator: validator,
         initialValue: initValue,
+        
       ),
     );
   }
