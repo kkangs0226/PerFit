@@ -40,8 +40,38 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final PreferredSizeWidget mainAppBar = AppBar(
+      title: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        alignment: Alignment.center,
+        child: Row(
+          children: <Widget>[
+            Text(
+              _pages[_selectedPageIndex]['title'],
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            SizedBox(
+              width: 15,
+            ),
+          ],
+        ),
+      ),
+    );
+
     final PreferredSizeWidget appBar = AppBar(
-      title: Text(_pages[_selectedPageIndex]['title']),
+      title: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          _pages[_selectedPageIndex]['title'],
+          style: Theme.of(context).textTheme.headline1,
+        ),
+      ),
+      /*title: Text(_pages[_selectedPageIndex]['title']),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.undo),
@@ -50,10 +80,11 @@ class _TabsScreenState extends State<TabsScreen> {
             print('Signing out...');
           },
         ),
-      ],
+      ],*/
     );
+
     return Scaffold(
-      appBar: appBar,
+      appBar: _selectedPageIndex == 0 ? mainAppBar : appBar,
       body: _pages[_selectedPageIndex]['page'],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
@@ -67,23 +98,24 @@ class _TabsScreenState extends State<TabsScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Home'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.filter_list),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Filter'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.forum),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Forum'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Chat'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Padding(padding: EdgeInsets.all(0)),
+            title: Text('Profile'),
+            //title: Padding(padding: EdgeInsets.all(0)),
           ),
         ],
       ),

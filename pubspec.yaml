@@ -65,6 +65,19 @@ flutter:
     - assets/images/arts.jpg
     - assets/images/science.jpg
     - assets/images/engin.jpg
+    - assets/images/company_apple.png
+    - assets/images/company_orange.png
+    - assets/images/company_pear.png
+    - assets/images/company_melon.png
+    - assets/images/company_abc.png
+    - assets/images/student_1.jpg
+    - assets/images/student_2.jpeg
+    - assets/images/student_3.jpg
+    - assets/images/student_4.jpg
+    - assets/images/student_5.jpeg
+    - assets/images/new_students.png
+    - assets/images/resume.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -95,6 +108,10 @@ flutter:
           weight: 400
         - asset: assets/fonts/Montserrat-Medium.ttf
           weight: 400
+    - family: PatuaOne
+      fonts:
+        - asset: assets/fonts/PatuaOne-Regular.ttf
+          weight: 300
           
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
