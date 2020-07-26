@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:perfit_app/dummy_data.dart';
 import 'package:perfit_app/providers/companies_list.dart';
 import 'package:perfit_app/providers/offers.dart';
 import 'package:perfit_app/providers/students_list.dart';
@@ -25,8 +24,6 @@ import 'screens/home/tabs_screen.dart';
 import './screens/company_student_screens/company_details_screen.dart';
 import './screens/home/home_bar/new_companies_screen.dart';
 import './screens/home/tabs_screen.dart';
-import './models/student.dart';
-import './models/company.dart';
 import './wrapper.dart';
 
 void main() {

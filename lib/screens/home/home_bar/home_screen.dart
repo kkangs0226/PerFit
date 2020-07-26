@@ -179,8 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
         isStudent
             ? _companyListBuilder(companiesList.favouriteCompanies)
             : _studentListBuilder(studentsList.LIST_STUDENTS),
-
-        /*
         SizedBox(
           height: 25,
         ),
@@ -232,8 +230,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 20,
                             ),
-                            
-
                           ],
                         );
                       },
@@ -241,7 +237,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-              */
       ],
     );
   }
