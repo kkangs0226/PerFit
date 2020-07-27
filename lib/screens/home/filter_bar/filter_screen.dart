@@ -5,8 +5,9 @@ class FilterScreen extends StatelessWidget {
   static const routeName = './filterScreen';
   final bool isEmployer;
   final DocumentSnapshot currentUser;
+  final bool notSignedIn;
 
-  FilterScreen(this.isEmployer, this.currentUser);
+  FilterScreen(this.isEmployer, this.currentUser, this.notSignedIn);
 
   @override
   Widget build(BuildContext context) {

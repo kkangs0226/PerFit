@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../screens/home/home_bar/course_job_screen.dart';
-import '../../screens/home/home_bar/course_student_screen.dart';
 
 class CourseWidget extends StatelessWidget {
-  String courseId;
+  final String courseId;
+  final bool isEmployer;
 
-  CourseWidget(this.courseId);
+  CourseWidget(this.courseId, this.isEmployer);
 
-  Map<String, Map<String, String>> map = {
+  final Map<String, Map<String, String>> map = {
     'COM': {
       'image': 'assets/images/computing.jpg',
       'name': 'COMPUTING',
@@ -41,9 +41,10 @@ class CourseWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         print(courseId);
-        return Navigator.of(context).pushNamed(
-          CourseJobScreen.routeName, arguments: courseId,
-          //arguments: courseId,
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CourseJobScreen(courseId, isEmployer),
+          ),
         );
       },
       child: Column(

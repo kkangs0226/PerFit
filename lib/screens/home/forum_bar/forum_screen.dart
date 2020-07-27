@@ -5,8 +5,9 @@ class ForumScreen extends StatelessWidget {
   static const routeName = './forumScreen';
   final bool isEmployer;
   final DocumentSnapshot currentUser;
+  final bool notSignedIn;
 
-  ForumScreen(this.isEmployer, this.currentUser);
+  ForumScreen(this.isEmployer, this.currentUser, this.notSignedIn);
 
   @override
   Widget build(BuildContext context) {

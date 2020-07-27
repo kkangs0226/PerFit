@@ -167,7 +167,6 @@ class _MyAppState extends State<MyApp> {
             ForgotPasswordPage.routeName: (ctx) => ForgotPasswordPage(),
             AddJobPage.routeName: (ctx) => AddJobPage(),
             Wrapper.routeName: (ctx) => Wrapper(),
-            CourseJobScreen.routeName: (ctx) => CourseJobScreen(),
             CourseStudentScreen.routeName: (ctx) => CourseStudentScreen(),
             FavouritedStudentsScreen.routeName: (ctx) =>
                 FavouritedStudentsScreen(),

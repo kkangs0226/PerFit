@@ -23,19 +23,25 @@ class HomeScreen extends StatefulWidget {
   static const routeName = '/home_screen';
   final bool isEmployer;
   final DocumentSnapshot currentUser;
+  final bool notSignedIn;
 
-  HomeScreen(this.isEmployer, this.currentUser);
+  HomeScreen(this.isEmployer, this.currentUser, this.notSignedIn);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isEmployer;
   FirebaseUser currentUser;
 
   //List<Map<String, String>> _courseName = [];
-  bool isStudent = true;
+  bool isStudent;
+
+  @override
+  void initState() {
+    super.initState();
+    isStudent = !widget.isEmployer;
+  }
 
   Widget _buildHoriScroll(List<Widget> widgetList) {
     return Container(
@@ -131,11 +137,11 @@ class _HomeScreenState extends State<HomeScreen> {
         Heading('COURSES', isStudent),
         _buildHoriScroll(
           [
-            CourseWidget('COM'),
-            CourseWidget('BIZ'),
-            CourseWidget('ARTS'),
-            CourseWidget('SCI'),
-            CourseWidget('ENG'),
+            CourseWidget('COM', widget.isEmployer),
+            CourseWidget('BIZ', widget.isEmployer),
+            CourseWidget('ARTS', widget.isEmployer),
+            CourseWidget('SCI', widget.isEmployer),
+            CourseWidget('ENG', widget.isEmployer),
           ],
         ),
         Heading('NEW', isStudent),

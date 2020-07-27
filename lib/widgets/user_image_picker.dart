@@ -61,6 +61,15 @@ class _UserImagePickerState extends State<UserImagePicker> {
             backgroundColor: Theme.of(context).accentColor,
           ),
         ),
+        SizedBox(width: 20),
+        IconButton(
+            icon: Icon(Icons.delete, color: Colors.grey),
+            onPressed: () {
+              setState(() {
+                _pickedImage = null;
+                widget.pickImage(null);
+              });
+            })
       ],
     );
   }

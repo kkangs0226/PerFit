@@ -118,6 +118,7 @@ class DatabaseService {
         'past_projects': pastProj,
         'logo': imageUrl,
         'employer_profile': profileUrl,
+        'industry': industry,
       },
     );
   }

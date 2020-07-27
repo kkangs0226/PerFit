@@ -109,12 +109,12 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 60,
+                  height: MediaQuery.of(context).size.height * 0.15,
                 ),
                 Center(
                   child: Text(
                     'PerFit!',
-                    style: Theme.of(context).textTheme.headline1.copyWith(
+                    style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 45,
                           color: Theme.of(context).accentColor,
                         ),
@@ -170,7 +170,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         try {
                                           await _auth
                                               .signInWithEmailAndPassword(
-                                                  _email, _password);
+                                                  _email.trim(),
+                                                  _password.trim());
                                           print('signing in');
                                         } catch (error) {
                                           setState(
@@ -210,29 +211,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 25,
-                  child: FlatButton(
-                    child: Text(
-                      'Forgot password?',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () async {
-                      setState(() {
-                        _loading = true;
-                      });
-                      await Navigator.of(context)
-                          .pushNamed(ForgotPasswordPage.routeName);
-                      setState(() {
-                        _loading = false;
-                      });
-                    },
-                  ),
-                ),
+                // SizedBox(
+                //   height: 25,
+                //   child: FlatButton(
+                //     child: Text(
+                //       'Forgot password?',
+                //       style: TextStyle(
+                //         color: Theme.of(context).accentColor,
+                //         decoration: TextDecoration.underline,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //     onPressed: () async {
+                //       setState(() {
+                //         _loading = true;
+                //       });
+                //       await Navigator.of(context)
+                //           .pushNamed(ForgotPasswordPage.routeName);
+                //       setState(() {
+                //         _loading = false;
+                //       });
+                //     },
+                //   ),
+                // ),
                 SizedBox(height: 30),
                 Center(
                   child: Column(
@@ -250,28 +251,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       _buildNavigationHomepageButton(
                         context,
                         'Student',
-                        () async {
-                          setState(() {
-                            _loading = true;
-                          });
-                          await Navigator.of(context)
-                              .pushNamed(TabsScreen.routeName);
-                          setState(() {
-                            _loading = false;
-                          });
+                        () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => TabsScreen(
+                                isEmployerWidget: false,
+                                notSignedIn: true,
+                              ),
+                            ),
+                          );
                         },
                       ),
                       SizedBox(height: 15),
-                      _buildNavigationHomepageButton(context, 'Employer',
-                          () async {
-                        setState(() {
-                          _loading = true;
-                        });
-                        await Navigator.of(context)
-                            .pushNamed(TabsScreen.routeName);
-                        setState(() {
-                          _loading = false;
-                        });
+                      _buildNavigationHomepageButton(context, 'Employer', () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => TabsScreen(
+                              isEmployerWidget: true,
+                              notSignedIn: true,
+                            ),
+                          ),
+                        );
                       }),
                       SizedBox(height: 25),
                       Text(

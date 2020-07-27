@@ -130,21 +130,10 @@ class DummyData {
 
   final List<String> _industries = [
     'Technology',
-    'News Media',
-    'Education',
-    'Human Resource',
-    'Advertising',
+    'Research',
     'Communications',
-    'Construction',
-    'Entertainment',
-    'Fashion',
     'Finance',
-    'Hospitality',
-    'Infrastructure',
     'Manufacturing',
-    'Music',
-    'Retail',
-    'Service',
   ];
 
   List<int> get yearOfStudy {

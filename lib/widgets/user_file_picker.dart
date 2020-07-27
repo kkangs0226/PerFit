@@ -51,6 +51,16 @@ class _UserFilePickerState extends State<UserFilePicker> {
         Text(
           _pickedFile == null ? 'No file selected' : 'File has been selected',
         ),
+        SizedBox(width: 20),
+        IconButton(
+          icon: Icon(Icons.delete, color: Colors.grey),
+          onPressed: () => setState(
+            () {
+              _pickedFile = null;
+              widget.pickCV(null);
+            },
+          ),
+        )
       ],
     );
   }

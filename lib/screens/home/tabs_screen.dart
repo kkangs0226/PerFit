@@ -12,6 +12,11 @@ import 'profile_bar/employer_profile_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
+  final bool isEmployerWidget;
+  final bool notSignedIn;
+
+  TabsScreen({this.isEmployerWidget, this.notSignedIn = false});
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
@@ -36,21 +41,23 @@ class _TabsScreenState extends State<TabsScreen> {
       _isLoading = true;
     });
     currentUser = await FirebaseAuth.instance.currentUser();
-    result = await Firestore.instance
-        .collection('employers')
-        .document(currentUser.uid)
-        .get();
-    if (result.exists) {
-      isEmployer = true;
-      userData = result;
-      print('success');
-    } else {
-      isEmployer = false;
-      userData = await Firestore.instance
-          .collection('students')
+    if (currentUser != null) {
+      result = await Firestore.instance
+          .collection('employers')
           .document(currentUser.uid)
           .get();
-      print('failure');
+      if (result.exists) {
+        isEmployer = true;
+        userData = result;
+        print('success');
+      } else {
+        isEmployer = false;
+        userData = await Firestore.instance
+            .collection('students')
+            .document(currentUser.uid)
+            .get();
+        print('failure');
+      }
     }
     setState(() {
       _isLoading = false;
@@ -69,62 +76,87 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, Object>> _pages = [
-      {'page': HomeScreen(isEmployer, userData), 'title': 'PerFit!'},
-      {'page': FilterScreen(isEmployer, userData), 'title': 'Filter'},
-      {'page': ForumScreen(isEmployer, userData), 'title': 'Forum'},
-      {'page': ChatListScreen(isEmployer, userData), 'title': 'Chat Lists'},
       {
-        'page': !isEmployer
-            ? StudentProfileScreen(userData)
-            : EmployerProfileScreen(userData),
+        'page': !widget.notSignedIn
+            ? HomeScreen(isEmployer, userData, widget.notSignedIn)
+            : HomeScreen(widget.isEmployerWidget, userData, widget.notSignedIn),
+        'title': 'PerFit!'
+      },
+      {
+        'page': FilterScreen(isEmployer, userData, widget.notSignedIn),
+        'title': 'Filter'
+      },
+      {
+        'page': ForumScreen(isEmployer, userData, widget.notSignedIn),
+        'title': 'Forum'
+      },
+      {
+        'page': ChatListScreen(isEmployer, userData, widget.notSignedIn),
+        'title': 'Chat Lists'
+      },
+      {
+        'page': !widget.notSignedIn
+            ? !isEmployer
+                ? StudentProfileScreen(userData,
+                    notSignedIn: widget.notSignedIn)
+                : EmployerProfileScreen(userData,
+                    notSignedIn: widget.notSignedIn)
+            : !widget.isEmployerWidget
+                ? StudentProfileScreen(userData,
+                    notSignedIn: widget.notSignedIn)
+                : EmployerProfileScreen(userData,
+                    notSignedIn: widget.notSignedIn),
         'title': 'User Profile'
       },
     ];
 
+    void _onSelect(_) {
+      if (!widget.notSignedIn) {
+        _auth.signOut();
+      } else {
+        Navigator.of(context).pop();
+      }
+    }
+
     final PreferredSizeWidget mainAppBar = AppBar(
+      automaticallyImplyLeading: false,
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.arrow_left),
-          onPressed: () => _auth.signOut(),
-        )
+        PopupMenuButton(
+            onSelected: _onSelect,
+            itemBuilder: (ctx) {
+              return {!widget.notSignedIn ? 'Sign out' : 'Return to log in'}
+                  .map((value) {
+                return PopupMenuItem(child: Text(value), value: value);
+              }).toList();
+            })
       ],
-      title: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 20,
-        ),
-        alignment: Alignment.center,
-        child: Row(
-          children: <Widget>[
-            Text(
-              _pages[_selectedPageIndex]['title'],
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            SizedBox(
-              width: 15,
-            ),
-          ],
-        ),
+      title: Text(
+        _pages[_selectedPageIndex]['title'],
+        style: Theme.of(context).textTheme.headline6,
       ),
     );
 
     final PreferredSizeWidget appBar = AppBar(
+      automaticallyImplyLeading: false,
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.arrow_left),
-          onPressed: () => _auth.signOut(),
-        )
+        PopupMenuButton(
+            onSelected: _onSelect,
+            itemBuilder: (ctx) {
+              return {!widget.notSignedIn ? 'Sign out' : 'Return to log in'}
+                  .map((value) {
+                return PopupMenuItem(child: Text(value), value: value);
+              }).toList();
+            })
       ],
-      title: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 20,
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          _pages[_selectedPageIndex]['title'],
-          style: Theme.of(context).textTheme.headline1,
-        ),
+      title: Text(
+        _pages[_selectedPageIndex]['title'],
+        style: Theme.of(context).textTheme.headline1.copyWith(
+              color: Theme.of(context).accentColor,
+              fontSize: 25,
+            ),
       ),
-      /*title: Text(_pages[_selectedPageIndex]['title']),
+    );
+    /*title: Text(_pages[_selectedPageIndex]['title']),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.undo),
@@ -134,7 +166,6 @@ class _TabsScreenState extends State<TabsScreen> {
           },
         ),
       ],*/
-    );
 
     return Scaffold(
       appBar: _selectedPageIndex == 0 ? mainAppBar : appBar,

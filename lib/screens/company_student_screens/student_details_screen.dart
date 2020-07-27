@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 //import 'package:perfit_app/dummy_data.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/student.dart';
 import '../../providers/offers.dart';
 import '../../providers/students_list.dart';
 
