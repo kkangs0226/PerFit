@@ -117,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 45,
                           color: Theme.of(context).accentColor,
+                          fontFamily: 'Pacifico',
                         ),
                   ),
                 ),

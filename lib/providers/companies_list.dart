@@ -86,5 +86,13 @@ class CompaniesList with ChangeNotifier {
     return LIST_COMPANIES.where((company) => company.isFavourite).toList();
   }
 
+  List<Company> get offeredCompanies {
+    return [...LIST_COMPANIES];
+  }
+
+  void updateList() {
+    notifyListeners();
+  }
+
   //List<Company>
 }

@@ -20,9 +20,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         title: Text(
           'PerFit',
           style: Theme.of(context).textTheme.headline1.copyWith(
-                fontSize: 20,
-                color: Theme.of(context).accentColor,
-              ),
+              fontSize: 20,
+              color: Theme.of(context).accentColor,
+              fontFamily: 'Pacifico'),
         ),
       ),
       body: Column(

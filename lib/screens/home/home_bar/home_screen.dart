@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   FirebaseUser currentUser;
 
   //List<Map<String, String>> _courseName = [];
+
   bool isStudent;
 
   @override
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     isStudent = !widget.isEmployer;
   }
+
 
   Widget _buildHoriScroll(List<Widget> widgetList) {
     return Container(
@@ -86,41 +88,68 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _offerListBuilderCompanies(List<OfferItem> widgetList) {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widgetList.length,
-        itemBuilder: (ctx, i) {
-          return ChangeNotifierProvider.value(
-            value: Provider.of<CompaniesList>(context)
-                .LIST_COMPANIES
-                .firstWhere((company) => company.id == widgetList[i].companyId),
-            child: OfferWidget(false),
+  Widget _offerListBuilderCompanies(Map<String, OfferItem> widgetList) {
+    return widgetList.length == 0
+        ? Container(
+            height: 200,
+            width: double.infinity,
+            child: Container(
+              child: Image.asset(
+                'assets/images/no_offers.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : Container(
+            height: 200,
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widgetList.length,
+              itemBuilder: (ctx, i) {
+                return ChangeNotifierProvider.value(
+                  value: Provider.of<CompaniesList>(context)
+                      .LIST_COMPANIES
+                      .firstWhere((company) =>
+                          company.id ==
+                          widgetList.values.toList()[i].companyId),
+                  child: OfferWidget(true),
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
   }
 
-  Widget _offerListBuilderStudents(List<OfferItem> widgetList) {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widgetList.length,
-        itemBuilder: (ctx, i) {
-          return ChangeNotifierProvider.value(
-            value: Provider.of<StudentsList>(context).LIST_STUDENTS.firstWhere(
-                (student) => student.name == widgetList[i].studentId),
-            child: OfferWidget(true),
+  Widget _offerListBuilderStudents(Map<String, OfferItem> offeredStudents) {
+    return offeredStudents.length == 0
+        ? Container(
+            height: 200,
+            width: double.infinity,
+            child: Container(
+              child: Image.asset(
+                'assets/images/offers.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : Container(
+            height: 200,
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: offeredStudents.length,
+              itemBuilder: (ctx, i) {
+                return ChangeNotifierProvider.value(
+                  value: Provider.of<StudentsList>(context)
+                      .LIST_STUDENTS
+                      .firstWhere((student) =>
+                          student.name ==
+                          offeredStudents.values.toList()[i].studentId),
+                  child: OfferWidget(false),
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
   }
 
   @override
@@ -151,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Heading('OFFER', isStudent),
         isStudent
             ? _offerListBuilderCompanies(offers.offerListCompanies)
-            : _offerListBuilderStudents(offers.offerListCompanies),
+            : _offerListBuilderStudents(offers.offerListStudents),
         SizedBox(height: 50, width: 50),
         Heading('FAVOURITES', isStudent),
         isStudent

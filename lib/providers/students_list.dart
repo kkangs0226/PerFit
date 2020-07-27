@@ -34,7 +34,7 @@ class StudentsList with ChangeNotifier {
       course: 'SCI',
       year: 3,
       age: 13,
-      gaveOffer: true,
+      gaveOffer: false,
       profileURL: 'assets/images/student_3.jpg',
       resumeURL: 'assets/images/resume.jpg',
       personalStatement:
@@ -46,7 +46,7 @@ class StudentsList with ChangeNotifier {
       course: 'ARTS',
       year: 1,
       age: 45,
-      gaveOffer: true,
+      gaveOffer: false,
       profileURL: 'assets/images/student_4.jpg',
       resumeURL: 'assets/images/resume.jpg',
       personalStatement:
@@ -58,7 +58,7 @@ class StudentsList with ChangeNotifier {
       course: 'BIZ',
       year: 4,
       age: 100,
-      gaveOffer: true,
+      gaveOffer: false,
       profileURL: 'assets/images/student_5.jpeg',
       resumeURL: 'assets/images/resume.jpg',
       personalStatement:

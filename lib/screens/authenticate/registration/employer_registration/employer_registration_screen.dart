@@ -76,6 +76,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
           style: Theme.of(context).textTheme.headline1.copyWith(
                 fontSize: 20,
                 color: Theme.of(context).accentColor,
+                fontFamily: 'Pacifico',
               ),
         ),
         automaticallyImplyLeading: false,

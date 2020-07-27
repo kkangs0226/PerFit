@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../screens/company_student_screens/company_details_screen.dart';
 import '../../models/company.dart';
-import '../../providers/companies_list.dart';
+//import '../../providers/companies_list.dart';
 
 class CompanyWidget extends StatelessWidget {
   /*final String id;
