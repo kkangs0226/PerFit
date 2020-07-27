@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
     isStudent = !widget.isEmployer;
   }
 
-
   Widget _buildHoriScroll(List<Widget> widgetList) {
     return Container(
       height: 200,
