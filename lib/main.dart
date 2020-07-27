@@ -25,6 +25,7 @@ import './screens/company_student_screens/company_details_screen.dart';
 import './screens/home/home_bar/new_companies_screen.dart';
 import './screens/home/tabs_screen.dart';
 import './wrapper.dart';
+import './models/company.dart';
 
 void main() {
   runApp(MyApp());
@@ -93,6 +94,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (ctx) => Offers(),
         ),
+        //ChangeNotifierProvider(create: (ctx) => Company(),)
       ],
       child: StreamProvider<User>.value(
         value: AuthService().user,

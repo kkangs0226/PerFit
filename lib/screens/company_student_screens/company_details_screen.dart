@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 //import 'package:perfit_app/dummy_data.dart';
 
 import '../../providers/companies_list.dart';
+import '../../models/company.dart';
 
 class CompanyDetailsScreen extends StatelessWidget {
   static const routeName = './company_details_screen';
@@ -16,9 +17,8 @@ class CompanyDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final companyId = ModalRoute.of(context).settings.arguments as String;
-    final selectedCompany = Provider.of<CompaniesList>(
-      context,
-    ).findById(companyId);
+    final companies = Provider.of<CompaniesList>(context);
+    final selectedCompany = companies.findById(companyId);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -172,6 +172,7 @@ class CompanyDetailsScreen extends StatelessWidget {
             ),
             onPressed: () {
               selectedCompany.toggleFavourites();
+              companies.updateList();
               if (selectedCompany.isFavourite) {
                 Scaffold.of(context).hideCurrentSnackBar();
                 Scaffold.of(context).showSnackBar(

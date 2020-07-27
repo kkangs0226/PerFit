@@ -23,7 +23,7 @@ class StudentDetailsScreen extends StatelessWidget {
     final selectedStudent = Provider.of<StudentsList>(
       context,
     ).findById(studentName);
-    final offerList = Provider.of<Offers>(context, listen: false);
+    final offerList = Provider.of<Offers>(context);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 

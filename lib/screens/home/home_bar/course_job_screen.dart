@@ -9,15 +9,24 @@ class CourseJobScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PerFit!'),
+        title: const Text('Courses'),
       ),
       /* body: ListView.builder(itemBuilder: (ctx, index) {
         return JobWidget();
         }
         )
       */
-      body: Center(
-        child: Text('course'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              height: 200,
+              child: Container(),
+            ),
+            Text('course'),
+          ],
+        ),
       ),
     );
   }

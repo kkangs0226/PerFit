@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   //List<Map<String, String>> _courseName = [];
 
-  bool isStudent = true;
+  bool isStudent = false;
 
   Widget _buildHoriScroll(List<Widget> widgetList) {
     return Container(
