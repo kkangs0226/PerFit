@@ -111,9 +111,8 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'Montserrat',
             textTheme: ThemeData.light().textTheme.copyWith(
                   headline6: TextStyle(
-                    fontSize: 25,
-                    fontFamily: 'Pacifico',
-                    color: Colors.white,
+                    fontSize: 17,
+                    color: Colors.black,
                   ),
                   headline1: TextStyle(
                     //fontFamily: 'Montserrat',

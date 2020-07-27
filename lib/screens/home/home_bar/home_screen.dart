@@ -18,8 +18,6 @@ import '../../../providers/students_list.dart';
 import '../../../models/student.dart';
 //import '../../../models/';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../chat_bar/chat_screen.dart';
-import '../../../models/chat.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home_screen';
@@ -239,20 +237,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _companyListBuilder(List<Company> widgetList) {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widgetList.length,
-        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-          value: widgetList[i],
-          child: CompanyWidget(),
-        ),
+    return widgetList.length == 0
+        ? Container(
+            height: 200,
+            width: double.infinity,
+            child: Container(
+              child: Image.asset(
+                'assets/images/no_favourites.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : Container(
+            height: 200,
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widgetList.length,
+              itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                value: widgetList[i],
+                child: CompanyWidget(),
+              ),
 
-        //itemBuilder: (ctx, i) => ,
-      ),
-    );
+              //itemBuilder: (ctx, i) => ,
+            ),
+          );
   }
 
   Widget _studentListBuilder(List<Student> widgetList) {

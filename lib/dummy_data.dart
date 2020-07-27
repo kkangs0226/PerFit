@@ -168,13 +168,14 @@ class DummyData {
     return _industries;
   }
 
-  static Map<String, Company> DUMMY_COMPANIES = {
-    'abc': Company(
+  static List<Company> DUMMY_COMPANIES = [
+    Company(
       id: 'abc',
       name: 'ABC Company',
       logoURL: 'assets/images/company_abc.png',
       founderName: 'Anthony Poh',
       industry: 'Architecture',
+      location: '290 Orchard Rd, Singapore 238859',
       joinedDate: '26/02/2020',
       isFavourite: false,
       tempJob: {
@@ -184,13 +185,14 @@ class DummyData {
       },
       jobList: null,
     ),
-    'apple': Company(
+    Company(
         id: 'apple',
         name: 'Appol',
         logoURL: 'assets/images/company_apple.png',
         founderName: 'Xavier Poh',
         industry: 'Marketing',
         joinedDate: '21/02/2020',
+        location: '290 Orchard Rd, Singapore 238859',
         isFavourite: false,
         tempJob: {
           'title': 'Marketer',
@@ -198,7 +200,7 @@ class DummyData {
           'skillsets': 'Fruit tasting ability, Good communication skills'
         },
         jobList: null),
-    'melon': Company(
+    Company(
         id: 'melon',
         name: 'BeatAPPOL',
         logoURL: 'assets/images/company_melon.png',
@@ -213,13 +215,14 @@ class DummyData {
           'skillsets': 'Flutter, Javascript, Java, Web Development'
         },
         jobList: null),
-    'pear': Company(
+    Company(
         id: 'pear',
         name: 'PearWithMe',
         logoURL: 'assets/images/company_pear.png',
         founderName: 'Kang Su Min',
         industry: 'Civil Engineering',
         joinedDate: '21/08/2020',
+        location: '290 Orchard Rd, Singapore 238859',
         isFavourite: true,
         tempJob: {
           'title': 'Software Engineer Intern',
@@ -227,13 +230,14 @@ class DummyData {
           'skillsets': 'HTML, CSS, Java, Web Development'
         },
         jobList: null),
-    'orange': Company(
+    Company(
         id: 'orange',
         name: 'AnnoyingOrange',
         logoURL: 'assets/images/company_orange.png',
         founderName: 'Ming Kang',
         industry: 'Fishing',
         joinedDate: '06/03/2020',
+        location: '290 Orchard Rd, Singapore 238859',
         isFavourite: true,
         tempJob: {
           'title': 'Annoying Intern',
@@ -241,10 +245,10 @@ class DummyData {
           'skillsets': 'Napping, Lazing, Big appeitite'
         },
         jobList: null),
-  };
+  ];
 
-  static Map<String, Student> DUMMY_STUDENTS = {
-    'Popo Pipo': Student(
+  static List<Student> DUMMY_STUDENTS = [
+    Student(
       name: 'Popo Pipo',
       school: 'NUS',
       course: 'COM',
@@ -256,7 +260,7 @@ class DummyData {
           'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
       resumeURL: 'assets/images/resume.jpg',
     ),
-    'Thomas Train': Student(
+    Student(
       name: 'Thomas Train',
       school: 'NTU',
       course: 'BIZ',
@@ -268,7 +272,7 @@ class DummyData {
       personalStatement:
           'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
     ),
-    'Kang Su Min': Student(
+    Student(
       name: 'Kang Su Min',
       school: 'NUS',
       course: 'SCI',
@@ -280,7 +284,7 @@ class DummyData {
       personalStatement:
           'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
     ),
-    'Homer Simpson': Student(
+    Student(
       name: 'Homer Simpson',
       school: 'NUS',
       course: 'ARTS',
@@ -292,7 +296,7 @@ class DummyData {
       personalStatement:
           'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as.',
     ),
-    'Donald Duck': Student(
+    Student(
       name: 'Donald Duck',
       school: 'Ngee Ann Polytechnic',
       course: 'BIZ',
@@ -304,5 +308,5 @@ class DummyData {
       personalStatement:
           'Now seven world think timed while her. Spoil large oh he rooms on since an. Am up unwilling eagerness perceived incommode. Are not windows set luckily musical hundred can. Collecting if sympathize middletons be of of reasonably. Horrible so kindness at thoughts exercise no weddings subjects. The mrs gay removed towards journey chapter females offered not. Led distrusts otherwise who may newspaper but. Last he dull am none he mile hold as. ',
     ),
-  };
+  ];
 }
