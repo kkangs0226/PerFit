@@ -24,14 +24,17 @@ class OfferItem {
 
 class Offers with ChangeNotifier {
   Map<String, OfferItem> _offerListStudents = {};
-  Map<String, OfferItem> _offerListCompanies = {};
+  Map<String, OfferItem> _offerListCompanies = {
+    '${DateTime.now().toString()}':
+        OfferItem(isStudent: false, companyId: 'id123', studentId: 'nil')
+  };
 
   Map<String, OfferItem> get offerListCompanies {
-    return {..._offerListCompanies};
+    return _offerListCompanies;
   }
 
   Map<String, OfferItem> get offerListStudents {
-    return {..._offerListStudents};
+    return _offerListStudents;
   }
 
   void addOfferStudent(String studentId, String name) {
