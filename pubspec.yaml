@@ -77,6 +77,8 @@ flutter:
     - assets/images/student_5.jpeg
     - assets/images/new_students.png
     - assets/images/resume.jpg
+    - assets/images/offers.png
+    - assets/images/no_offers.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

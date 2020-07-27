@@ -39,10 +39,13 @@ class CourseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context).pushNamed(
-        CourseJobScreen.routeName,
-        //arguments: courseId,
-      ),
+      onTap: () {
+        print(courseId);
+        return Navigator.of(context).pushNamed(
+          CourseJobScreen.routeName, arguments: courseId,
+          //arguments: courseId,
+        );
+      },
       child: Column(
         children: <Widget>[
           Card(

@@ -2,30 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:perfit_app/screens/company_student_screens/company_details_screen.dart';
 import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
 import 'package:provider/provider.dart';
-//import 'package:provider/provider.dart';
 
-//import '../../dummy_data.dart';
-//import '../../models/company.dart';
-//import '../../models/student.dart';
-import '../../providers/offers.dart';
 import '../../models/student.dart';
 import '../../models/company.dart';
-import '../../providers/companies_list.dart';
-import '../../providers/students_list.dart';
 
 class OfferWidget extends StatelessWidget {
   final bool isStudent;
-
-  //final List<Student> offeredStudents;
-
-  //OfferWidget(this.offeredStudents);
 
   OfferWidget(this.isStudent);
 
   @override
   Widget build(BuildContext context) {
-    final company = isStudent ? null : Provider.of<Company>(context);
-    final student = isStudent ? Provider.of<Student>(context) : null;
+    final company = isStudent ? Provider.of<Company>(context) : null;
+    final student = isStudent ? null : Provider.of<Student>(context);
 
     return GestureDetector(
       onTap: () => isStudent
@@ -146,7 +135,7 @@ class OfferWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.headline5,
                             ),
                             Text(
-                              'Date Offered: ${company.joinedDate}',
+                              'Date Offered: 23/04/2020',
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.headline5,

@@ -3,10 +3,13 @@ import 'package:perfit_app/providers/companies_list.dart';
 import 'package:perfit_app/providers/offers.dart';
 import 'package:perfit_app/providers/students_list.dart';
 import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
+import 'package:perfit_app/screens/home/chat_bar/chat_list_screen.dart';
+import 'package:perfit_app/screens/home/forum_bar/forum_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/offer_status_employer_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/offer_status_student_screen.dart';
 import 'package:perfit_app/screens/home/chat_bar/chat_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/home_screen.dart';
+import 'package:perfit_app/screens/home/profile_bar/student_profile_screen.dart';
 import 'package:provider/provider.dart';
 
 import './screens/authenticate/forgot_password_screen.dart';
@@ -26,6 +29,7 @@ import './screens/home/home_bar/new_companies_screen.dart';
 import './screens/home/tabs_screen.dart';
 import './wrapper.dart';
 import './models/company.dart';
+import './screens/home/filter_bar/filter_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -179,7 +183,6 @@ class _MyAppState extends State<MyApp> {
                 OfferStatusEmployerScreen(),
             StudentDetailsScreen.routeName: (ctx) => StudentDetailsScreen(),
             ChatScreen.routeName: (ctx) => ChatScreen(),
-            HomeScreen.routeName: (ctx) => HomeScreen(),
           },
         ),
       ),

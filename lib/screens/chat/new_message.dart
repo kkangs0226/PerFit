@@ -17,16 +17,34 @@ class _NewMessageState extends State<NewMessage> {
   var _enteredMessage = '';
 
   void _sendMessage() async {
+    DocumentSnapshot receiverData;
     DocumentSnapshot userData;
     FocusScope.of(context).unfocus();
     var timeStamp = Timestamp.now();
     _controller.clear();
     final currentUser = await FirebaseAuth.instance.currentUser();
     if (widget.isEmployer) {
+      receiverData = await Firestore.instance
+          .collection('students')
+          .document(widget.receiverUid)
+          .get();
       userData = await Firestore.instance
           .collection('employers')
           .document(currentUser.uid)
           .get();
+      Firestore.instance
+          .collection('employers')
+          .document(currentUser.uid)
+          .collection('chats')
+          .document(widget.receiverUid)
+          .setData(
+        {
+          'createdAt': timeStamp,
+          'name': receiverData['name'],
+          'imageUrl': receiverData['profile_image'],
+          'text': _enteredMessage
+        },
+      );
       Firestore.instance
           .collection('employers')
           .document(currentUser.uid)
@@ -41,6 +59,19 @@ class _NewMessageState extends State<NewMessage> {
         'name': userData['name'],
         'userImage': userData['logo'],
       });
+      Firestore.instance
+          .collection('students')
+          .document(widget.receiverUid)
+          .collection('chats')
+          .document(currentUser.uid)
+          .setData(
+        {
+          'createdAt': timeStamp,
+          'name': userData['name'],
+          'imageUrl': userData['logo'],
+          'text': _enteredMessage
+        },
+      );
       Firestore.instance
           .collection('students')
           .document(widget.receiverUid)
@@ -56,10 +87,27 @@ class _NewMessageState extends State<NewMessage> {
         'userImage': userData['logo'],
       });
     } else {
+      receiverData = await Firestore.instance
+          .collection('employers')
+          .document(widget.receiverUid)
+          .get();
       userData = await Firestore.instance
           .collection('students')
           .document(currentUser.uid)
           .get();
+      Firestore.instance
+          .collection('students')
+          .document(currentUser.uid)
+          .collection('chats')
+          .document(widget.receiverUid)
+          .setData(
+        {
+          'createdAt': timeStamp,
+          'name': receiverData['name'],
+          'imageUrl': receiverData['logo'],
+          'text': _enteredMessage
+        },
+      );
       Firestore.instance
           .collection('students')
           .document(currentUser.uid)
@@ -74,6 +122,19 @@ class _NewMessageState extends State<NewMessage> {
         'name': userData['name'],
         'userImage': userData['profile_image'],
       });
+      Firestore.instance
+          .collection('employers')
+          .document(widget.receiverUid)
+          .collection('chats')
+          .document(currentUser.uid)
+          .setData(
+        {
+          'createdAt': timeStamp,
+          'name': userData['name'],
+          'imageUrl': userData['profile_image'],
+          'text': _enteredMessage
+        },
+      );
       Firestore.instance
           .collection('employers')
           .document(widget.receiverUid)

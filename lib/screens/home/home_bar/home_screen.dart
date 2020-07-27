@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:perfit_app/models/company.dart';
@@ -20,10 +18,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../chat_bar/chat_screen.dart';
 import '../../../models/chat.dart';
-import '../../../widgets/loading.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home_screen';
+  final bool isEmployer;
+  final DocumentSnapshot currentUser;
+
+  HomeScreen(this.isEmployer, this.currentUser);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -31,39 +32,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isEmployer;
-  bool _isLoading = true;
   FirebaseUser currentUser;
 
-  @override
-  void initState() {
-    super.initState();
-    _checkIfEmployer();
-  }
-
-  Future<void> _checkIfEmployer() async {
-    DocumentSnapshot result;
-    setState(() {
-      _isLoading = true;
-    });
-    currentUser = await FirebaseAuth.instance.currentUser();
-    result = await Firestore.instance
-        .collection('employers')
-        .document(currentUser.uid)
-        .get();
-    if (result.exists) {
-      isEmployer = true;
-      print('success');
-    } else {
-      isEmployer = false;
-      print('failure');
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
   //List<Map<String, String>> _courseName = [];
 
-  bool isStudent = false;
+  bool isStudent = true;
 
   Widget _buildHoriScroll(List<Widget> widgetList) {
     return Container(
@@ -108,41 +81,68 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _offerListBuilderCompanies(List<OfferItem> widgetList) {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widgetList.length,
-        itemBuilder: (ctx, i) {
-          return ChangeNotifierProvider.value(
-            value: Provider.of<CompaniesList>(context)
-                .LIST_COMPANIES
-                .firstWhere((company) => company.id == widgetList[i].companyId),
-            child: OfferWidget(false),
+  Widget _offerListBuilderCompanies(Map<String, OfferItem> widgetList) {
+    return widgetList.length == 0
+        ? Container(
+            height: 200,
+            width: double.infinity,
+            child: Container(
+              child: Image.asset(
+                'assets/images/no_offers.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : Container(
+            height: 200,
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widgetList.length,
+              itemBuilder: (ctx, i) {
+                return ChangeNotifierProvider.value(
+                  value: Provider.of<CompaniesList>(context)
+                      .LIST_COMPANIES
+                      .firstWhere((company) =>
+                          company.id ==
+                          widgetList.values.toList()[i].companyId),
+                  child: OfferWidget(true),
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
   }
 
-  Widget _offerListBuilderStudents(List<OfferItem> widgetList) {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widgetList.length,
-        itemBuilder: (ctx, i) {
-          return ChangeNotifierProvider.value(
-            value: Provider.of<StudentsList>(context).LIST_STUDENTS.firstWhere(
-                (student) => student.name == widgetList[i].studentId),
-            child: OfferWidget(true),
+  Widget _offerListBuilderStudents(Map<String, OfferItem> offeredStudents) {
+    return offeredStudents.length == 0
+        ? Container(
+            height: 200,
+            width: double.infinity,
+            child: Container(
+              child: Image.asset(
+                'assets/images/offers.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : Container(
+            height: 200,
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: offeredStudents.length,
+              itemBuilder: (ctx, i) {
+                return ChangeNotifierProvider.value(
+                  value: Provider.of<StudentsList>(context)
+                      .LIST_STUDENTS
+                      .firstWhere((student) =>
+                          student.name ==
+                          offeredStudents.values.toList()[i].studentId),
+                  child: OfferWidget(false),
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
   }
 
   @override
@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Heading('OFFER', isStudent),
         isStudent
             ? _offerListBuilderCompanies(offers.offerListCompanies)
-            : _offerListBuilderStudents(offers.offerListCompanies),
+            : _offerListBuilderStudents(offers.offerListStudents),
         SizedBox(height: 50, width: 50),
         Heading('FAVOURITES', isStudent),
         isStudent
@@ -182,61 +182,59 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(
           height: 25,
         ),
-        _isLoading
-            ? Loading()
-            : StreamBuilder<QuerySnapshot>(
-                stream: isEmployer
-                    ? Firestore.instance.collection('students').snapshots()
-                    : Firestore.instance.collection('employers').snapshots(),
-                builder: (ctx, snapshots) {
-                  if (snapshots.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  print(snapshots.data.documents.length);
-                  return Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 50,
-                    ),
-                    height: snapshots.data.documents.length * 100.0,
-                    child: ListView.builder(
-                      itemCount: snapshots.data.documents.length,
-                      itemBuilder: (ctx, index) {
-                        return Column(
-                          children: [
-                            Text(snapshots.data.documents[index]['name']),
-                            RaisedButton.icon(
-                              onPressed: () {
-                                // print(snapshots.data.documents[index]
-                                //     ['profile_image']);
-                                String imageUrl = !isEmployer
-                                    ? snapshots.data.documents[index]['logo']
-                                    : snapshots.data.documents[index]
-                                        ['profile_image'];
-                                Navigator.of(context).pushNamed(
-                                  ChatScreen.routeName,
-                                  arguments: Chat(
-                                    snapshots.data.documents[index].documentID,
-                                    snapshots.data.documents[index]['name'],
-                                    isEmployer,
-                                    imageUrl,
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.send),
-                              label: Text('send'),
+        StreamBuilder<QuerySnapshot>(
+          stream: widget.isEmployer
+              ? Firestore.instance.collection('students').snapshots()
+              : Firestore.instance.collection('employers').snapshots(),
+          builder: (ctx, snapshots) {
+            if (snapshots.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            print(snapshots.data.documents.length);
+            return Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: 50,
+              ),
+              height: snapshots.data.documents.length * 100.0,
+              child: ListView.builder(
+                itemCount: snapshots.data.documents.length,
+                itemBuilder: (ctx, index) {
+                  return Column(
+                    children: [
+                      Text(snapshots.data.documents[index]['name']),
+                      RaisedButton.icon(
+                        onPressed: () {
+                          // print(snapshots.data.documents[index]
+                          //     ['profile_image']);
+                          String imageUrl = !widget.isEmployer
+                              ? snapshots.data.documents[index]['logo']
+                              : snapshots.data.documents[index]
+                                  ['profile_image'];
+                          Navigator.of(context).pushNamed(
+                            ChatScreen.routeName,
+                            arguments: Chat(
+                              snapshots.data.documents[index].documentID,
+                              snapshots.data.documents[index]['name'],
+                              widget.isEmployer,
+                              imageUrl,
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                          );
+                        },
+                        icon: Icon(Icons.send),
+                        label: Text('send'),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   );
                 },
               ),
+            );
+          },
+        ),
       ],
     );
   }

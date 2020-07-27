@@ -10,12 +10,6 @@ class NewStudentsJoined extends StatelessWidget {
         height: 200,
         width: double.infinity,
         child: Container(
-          /*padding: EdgeInsets.all(13),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-          ),
-          */
           child: Image.asset(
             'assets/images/new_students.png',
             fit: BoxFit.cover,

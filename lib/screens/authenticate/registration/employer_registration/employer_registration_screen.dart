@@ -76,6 +76,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
           style: Theme.of(context).textTheme.headline1.copyWith(
                 fontSize: 20,
                 color: Theme.of(context).accentColor,
+                fontFamily: 'Pacifico',
               ),
         ),
         automaticallyImplyLeading: false,
@@ -296,7 +297,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                         ),
                       ),
                       Positioned(
-                        right: 70,
+                        right: 60,
                         top: 20,
                         child: Checkbox(
                           activeColor: Theme.of(context).primaryColor,
@@ -312,7 +313,7 @@ class _EmployerRegistrationPageState extends State<EmployerRegistrationPage> {
                       ),
                       Positioned(
                         top: 15,
-                        right: 80,
+                        right: 70,
                         child: Text(
                           'Show on profile',
                           style: TextStyle(

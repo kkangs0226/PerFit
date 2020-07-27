@@ -20,9 +20,8 @@ class StudentDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final studentName = ModalRoute.of(context).settings.arguments as String;
-    final selectedStudent = Provider.of<StudentsList>(
-      context,
-    ).findById(studentName);
+    final selectedStudent =
+        Provider.of<StudentsList>(context, listen: false).findById(studentName);
     final offerList = Provider.of<Offers>(context);
     //final selectedStudent = DummyData.DUMMY_STUDENTS[1];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);

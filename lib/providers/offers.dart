@@ -1,11 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
-
-import '../models/company.dart';
-import '../models/student.dart';
-import '../dummy_data.dart';
-//import '../providers/companies_list.dart';
-//import '../providers/students_list.dart';
 
 class OfferItem {
   /*final String id;
@@ -30,23 +23,25 @@ class OfferItem {
 }
 
 class Offers with ChangeNotifier {
-  List<OfferItem> _offerListStudents = [];
-  List<OfferItem> _offerListCompanies = [];
+  Map<String, OfferItem> _offerListStudents = {};
+  Map<String, OfferItem> _offerListCompanies = {};
 
-  List<OfferItem> get offerListCompanies {
-    return [..._offerListCompanies];
+  Map<String, OfferItem> get offerListCompanies {
+    return {..._offerListCompanies};
   }
 
-  List<OfferItem> get offerListStudents {
-    return [..._offerListStudents];
+  Map<String, OfferItem> get offerListStudents {
+    return {..._offerListStudents};
   }
 
   void addOfferStudent(String studentId, String name) {
-    _offerListStudents.add(OfferItem(
-      isStudent: true,
-      studentId: studentId,
-      companyId: 'nil',
-    ));
+    _offerListStudents.putIfAbsent(
+        studentId,
+        () => OfferItem(
+              isStudent: true,
+              studentId: studentId,
+              companyId: 'nil',
+            ));
     notifyListeners();
   }
 
