@@ -9,6 +9,7 @@ import './home_bar/home_screen.dart';
 import 'profile_bar/student_profile_screen.dart';
 import '../../widgets/loading.dart';
 import 'profile_bar/employer_profile_screen.dart';
+import '../../widgets/home_bar/search/data_search.dart';
 
 class TabsScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
@@ -121,6 +122,12 @@ class _TabsScreenState extends State<TabsScreen> {
     final PreferredSizeWidget mainAppBar = AppBar(
       automaticallyImplyLeading: false,
       actions: <Widget>[
+        /*IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: DataSearch());
+            }),
+            */
         PopupMenuButton(
             onSelected: _onSelect,
             itemBuilder: (ctx) {
@@ -132,7 +139,11 @@ class _TabsScreenState extends State<TabsScreen> {
       ],
       title: Text(
         _pages[_selectedPageIndex]['title'],
-        style: Theme.of(context).textTheme.headline6,
+        style: Theme.of(context).textTheme.headline6.copyWith(
+              fontFamily: 'Pacifico',
+              fontSize: 25,
+              color: Colors.white,
+            ),
       ),
     );
 

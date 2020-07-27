@@ -90,6 +90,10 @@ class CompaniesList with ChangeNotifier {
     return [...LIST_COMPANIES];
   }
 
+  List<Company> get getCompanies {
+    return [...LIST_COMPANIES];
+  }
+
   void updateList() {
     notifyListeners();
   }
