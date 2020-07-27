@@ -1,7 +1,7 @@
 # PerFit
 
 
-PerFit! is a matchmaking platform - yes, matchmaking - for startups and students. Heard of too many job-matching platforms? PerFit isn't another JobStreet. Why it is a 'matchmaking' platform is because on PerFit, everything is a two-way communication. 
+PerFit! is a matchmaking platform - yes, matchmaking - for startups and students. Heard of too many job-matching platforms? PerFit isn't just another JobStreet. Why it is a 'matchmaking' platform is because on PerFit, everything is a two-way communication. 
 
 
 The days of filling in hundreds of applications only to check your email every morning and finding no 'Congratulations!' emails are over. As a student, simply express your interest in a company with a simple tap of a button, then wait for a company to send you an offer. Coolbeans. 
