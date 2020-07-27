@@ -15,6 +15,7 @@ class NewMessage extends StatefulWidget {
 class _NewMessageState extends State<NewMessage> {
   final _controller = TextEditingController();
   var _enteredMessage = '';
+  bool _isLoading = false;
 
   void _sendMessage() async {
     DocumentSnapshot receiverData;
@@ -22,6 +23,9 @@ class _NewMessageState extends State<NewMessage> {
     FocusScope.of(context).unfocus();
     var timeStamp = Timestamp.now();
     _controller.clear();
+    setState(() {
+      _isLoading = true;
+    });
     final currentUser = await FirebaseAuth.instance.currentUser();
     if (widget.isEmployer) {
       receiverData = await Firestore.instance
@@ -150,6 +154,9 @@ class _NewMessageState extends State<NewMessage> {
         'userImage': userData['profile_image'],
       });
     }
+    setState(() {
+      _isLoading = false;
+    });
     // final employerData = await Firestore.instance
     //     .collection('employers')
     //     .document(widget.uid)
@@ -177,13 +184,19 @@ class _NewMessageState extends State<NewMessage> {
               },
             ),
           ),
-          IconButton(
-            color: Theme.of(context).primaryColor,
-            icon: Icon(
-              Icons.send,
-            ),
-            onPressed: _enteredMessage.trim().isEmpty ? null : _sendMessage,
-          ),
+          _isLoading
+              ? CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).primaryColor),
+                )
+              : IconButton(
+                  color: Theme.of(context).primaryColor,
+                  icon: Icon(
+                    Icons.send,
+                  ),
+                  onPressed:
+                      _enteredMessage.trim().isEmpty ? null : _sendMessage,
+                ),
         ],
       ),
     );

@@ -5,8 +5,9 @@ import '../../screens/home/home_bar/course_job_screen.dart';
 class CourseWidget extends StatelessWidget {
   final String courseId;
   final bool isEmployer;
+  final bool notSignedIn;
 
-  CourseWidget(this.courseId, this.isEmployer);
+  CourseWidget(this.courseId, this.isEmployer, this.notSignedIn);
 
   final Map<String, Map<String, String>> map = {
     'COM': {
@@ -43,7 +44,7 @@ class CourseWidget extends StatelessWidget {
         print(courseId);
         return Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => CourseJobScreen(courseId, isEmployer),
+            builder: (context) => CourseJobScreen(courseId, isEmployer, notSignedIn),
           ),
         );
       },

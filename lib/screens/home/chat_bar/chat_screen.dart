@@ -15,38 +15,43 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final Chat chat = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          chat.name,
-          style: Theme.of(context).textTheme.headline2.copyWith(
-                color: Theme.of(context).accentColor,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        actions: <Widget>[
-          CircleAvatar(
-            backgroundImage: (chat.imageUrl != null && chat.imageUrl != '')
-                ? NetworkImage(
-                    chat.imageUrl,
-                  )
-                : null,
-            backgroundColor: Colors.grey[300],
-            radius: 30,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            chat.name,
+            style: Theme.of(context).textTheme.headline2.copyWith(
+                  color: Theme.of(context).accentColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
-          SizedBox(width: 20),
-        ],
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              // Expanded makes sure that listview takes as much space as the current screen while making it scrollable
-              child: Messages(chat.uid, chat.isEmployer),
+          actions: <Widget>[
+            CircleAvatar(
+              backgroundImage: (chat.imageUrl != null && chat.imageUrl != '')
+                  ? NetworkImage(
+                      chat.imageUrl,
+                    )
+                  : null,
+              backgroundColor: Colors.grey[300],
+              radius: 30,
             ),
-            NewMessage(chat.uid, chat.isEmployer),
+            SizedBox(width: 20),
           ],
+        ),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                // Expanded makes sure that listview takes as much space as the current screen while making it scrollable
+                child: Messages(chat.uid, chat.isEmployer),
+              ),
+              NewMessage(chat.uid, chat.isEmployer),
+            ],
+          ),
         ),
       ),
     );

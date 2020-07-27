@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:path/path.dart';
 import 'package:perfit_app/models/company.dart';
+import 'package:perfit_app/screens/company_student_screens/company_details_screen.dart';
+import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
 import 'package:perfit_app/widgets/home_bar/new_students_joined_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +18,6 @@ import '../../../providers/students_list.dart';
 import '../../../models/student.dart';
 //import '../../../models/';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../chat_bar/chat_screen.dart';
 import '../../../models/chat.dart';
 
@@ -32,8 +34,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FirebaseUser currentUser;
-
   //List<Map<String, String>> _courseName = [];
 
   bool isStudent;
@@ -42,6 +42,189 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     isStudent = !widget.isEmployer;
+  }
+
+  Widget _buildFavouriteCard(DocumentSnapshot snapshot, context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return !widget.isEmployer
+                ? CompanyDetailsScreen(
+                    userData: snapshot,
+                    notSignedIn: widget.notSignedIn,
+                  )
+                : StudentDetailsScreen(
+                    userData: snapshot,
+                    notSignedIn: widget.notSignedIn,
+                  );
+          },
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 17,
+            ),
+            padding: EdgeInsets.all(3),
+            height: 80,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              //color: Theme.of(context).primaryColorDark,
+              color: Colors.black54,
+            ),
+            child: Container(
+              padding: EdgeInsets.all(13),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: widget.isEmployer
+                  ? Image.network(
+                      snapshot['profile_image'],
+                      fit: BoxFit.cover,
+                    )
+                  : Image.network(snapshot['logo'], fit: BoxFit.cover),
+            ),
+          ),
+          Container(
+            height: 30,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(
+              vertical: 5,
+              horizontal: 10,
+            ),
+            child: Text(
+              widget.isEmployer ? snapshot['name'] : snapshot['company_name'],
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.headline3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOfferCard(DocumentSnapshot snapshot, context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return !widget.isEmployer
+                ? CompanyDetailsScreen(
+                    userData: snapshot,
+                    notSignedIn: widget.notSignedIn,
+                  )
+                : StudentDetailsScreen(
+                    userData: snapshot,
+                    notSignedIn: widget.notSignedIn,
+                  );
+          },
+        ),
+      ),
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Card(
+          elevation: 10,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 52,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: widget.isEmployer
+                        ? snapshot['profile_image'] != null
+                            ? NetworkImage(snapshot['profile_image'])
+                            : null
+                        : snapshot['logo'] != null
+                            ? NetworkImage(snapshot['logo'])
+                            : null,
+                    backgroundColor: Theme.of(context).accentColor,
+                  ),
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  child: !widget.isEmployer
+                      ? Container(
+                          margin: EdgeInsets.symmetric(vertical: 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Company name: ${snapshot['company_name']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Divider(),
+                              Text(
+                                'Address: ${snapshot['company_address']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Divider(),
+                              Text(
+                                'Industry: ${snapshot['industry']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          margin: EdgeInsets.symmetric(vertical: 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Name: ${snapshot['name']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Divider(),
+                              Text(
+                                'Course: ${snapshot['course']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Divider(),
+                              Text(
+                                'Specialisation: ${snapshot['specialisation']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildHoriScroll(List<Widget> widgetList) {
@@ -87,7 +270,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _offerListBuilderCompanies(Map<String, OfferItem> widgetList) {
+  Widget _offerListBuilderCompanies(
+      Map<String, OfferItem> widgetList, context) {
     return widgetList.length == 0
         ? Container(
             height: 200,
@@ -119,7 +303,8 @@ class _HomeScreenState extends State<HomeScreen> {
           );
   }
 
-  Widget _offerListBuilderStudents(Map<String, OfferItem> offeredStudents) {
+  Widget _offerListBuilderStudents(
+      Map<String, OfferItem> offeredStudents, context) {
     return offeredStudents.length == 0
         ? Container(
             height: 200,
@@ -165,11 +350,11 @@ class _HomeScreenState extends State<HomeScreen> {
         Heading('COURSES', isStudent),
         _buildHoriScroll(
           [
-            CourseWidget('COM', widget.isEmployer),
-            CourseWidget('BIZ', widget.isEmployer),
-            CourseWidget('ARTS', widget.isEmployer),
-            CourseWidget('SCI', widget.isEmployer),
-            CourseWidget('ENG', widget.isEmployer),
+            CourseWidget('COM', widget.isEmployer, widget.notSignedIn),
+            CourseWidget('BIZ', widget.isEmployer, widget.notSignedIn),
+            CourseWidget('ARTS', widget.isEmployer, widget.notSignedIn),
+            CourseWidget('SCI', widget.isEmployer, widget.notSignedIn),
+            CourseWidget('ENG', widget.isEmployer, widget.notSignedIn),
           ],
         ),
         Heading('NEW', isStudent),
@@ -177,70 +362,100 @@ class _HomeScreenState extends State<HomeScreen> {
             ? _companyListBuilder(companiesList.LIST_COMPANIES)
             : NewStudentsJoined(),
         Heading('OFFER', isStudent),
-        isStudent
-            ? _offerListBuilderCompanies(offers.offerListCompanies)
-            : _offerListBuilderStudents(offers.offerListStudents),
+        !widget.notSignedIn
+            ? StreamBuilder(
+                stream: isStudent
+                    ? Firestore.instance
+                        .collection('students')
+                        .document(widget.currentUser.documentID)
+                        .collection('offers_received')
+                        .snapshots()
+                    : Firestore.instance
+                        .collection('employers')
+                        .document(widget.currentUser.documentID)
+                        .collection('offers_sent')
+                        .snapshots(),
+                builder: (ctx, snapshots) {
+                  if (snapshots.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor),
+                      ),
+                    );
+                  }
+                  if (snapshots.data.documents.length > 0) {
+                    return Container(
+                      width: 200,
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshots.data.documents.length,
+                        itemBuilder: (ctx, index) {
+                          return _buildOfferCard(
+                              snapshots.data.documents[index], context);
+                        },
+                      ),
+                    );
+                  } else {
+                    return isStudent
+                        ? _offerListBuilderCompanies(
+                            offers.offerListCompanies, context)
+                        : _offerListBuilderStudents(
+                            offers.offerListStudents, context);
+                  }
+                },
+              )
+            : isStudent
+                ? _offerListBuilderCompanies(offers.offerListCompanies, context)
+                : _offerListBuilderStudents(offers.offerListStudents, context),
         SizedBox(height: 50, width: 50),
         Heading('FAVOURITES', isStudent),
-        isStudent
-            ? _companyListBuilder(companiesList.favouriteCompanies)
-            : _studentListBuilder(studentsList.LIST_STUDENTS),
-        SizedBox(
-          height: 25,
-        ),
-        StreamBuilder<QuerySnapshot>(
-          stream: widget.isEmployer
-              ? Firestore.instance.collection('students').snapshots()
-              : Firestore.instance.collection('employers').snapshots(),
-          builder: (ctx, snapshots) {
-            if (snapshots.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            print(snapshots.data.documents.length);
-            return Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 50,
-              ),
-              height: snapshots.data.documents.length * 100.0,
-              child: ListView.builder(
-                itemCount: snapshots.data.documents.length,
-                itemBuilder: (ctx, index) {
-                  return Column(
-                    children: [
-                      Text(snapshots.data.documents[index]['name']),
-                      RaisedButton.icon(
-                        onPressed: () {
-                          // print(snapshots.data.documents[index]
-                          //     ['profile_image']);
-                          String imageUrl = !widget.isEmployer
-                              ? snapshots.data.documents[index]['logo']
-                              : snapshots.data.documents[index]
-                                  ['profile_image'];
-                          Navigator.of(context).pushNamed(
-                            ChatScreen.routeName,
-                            arguments: Chat(
-                              snapshots.data.documents[index].documentID,
-                              snapshots.data.documents[index]['name'],
-                              widget.isEmployer,
-                              imageUrl,
-                            ),
-                          );
+        !widget.notSignedIn
+            ? StreamBuilder(
+                stream: isStudent
+                    ? Firestore.instance
+                        .collection('students')
+                        .document(widget.currentUser.documentID)
+                        .collection('favourites_sent')
+                        .snapshots()
+                    : Firestore.instance
+                        .collection('employers')
+                        .document(widget.currentUser.documentID)
+                        .collection('favourites_received')
+                        .snapshots(),
+                builder: (ctx, snapshots) {
+                  if (snapshots.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor),
+                      ),
+                    );
+                  }
+                  if (snapshots.data.documents.length > 0) {
+                    return Container(
+                      width: 200,
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshots.data.documents.length,
+                        itemBuilder: (ctx, index) {
+                          return _buildFavouriteCard(
+                              snapshots.data.documents[index], context);
                         },
-                        icon: Icon(Icons.send),
-                        label: Text('send'),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  );
+                    );
+                  } else {
+                    return isStudent
+                        ? _companyListBuilder(companiesList.favouriteCompanies)
+                        : _studentListBuilder(studentsList.LIST_STUDENTS);
+                  }
                 },
-              ),
-            );
-          },
-        ),
+              )
+            : isStudent
+                ? _companyListBuilder(companiesList.favouriteCompanies)
+                : _studentListBuilder(studentsList.LIST_STUDENTS),
       ],
     );
   }

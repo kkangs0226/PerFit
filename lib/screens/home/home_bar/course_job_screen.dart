@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:perfit_app/widgets/loading.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../company_student_screens/student_details_screen.dart';
+import '../../company_student_screens/company_details_screen.dart';
 //import '../widgets/job_widget.dart';
 
 class CourseJobScreen extends StatefulWidget {
   static const routeName = '/course_job_screen';
   final String courseId;
   final bool isEmployer;
+  final bool notSignedIn;
 
-  CourseJobScreen(this.courseId, this.isEmployer);
+  CourseJobScreen(this.courseId, this.isEmployer, this.notSignedIn);
 
   @override
   _CourseJobScreenState createState() => _CourseJobScreenState();
@@ -22,6 +26,7 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
   String employerSearchKey = '';
   List<DocumentSnapshot> displayUsers = [];
   bool _isLoading = false;
+  FirebaseUser currentUser;
 
   @override
   void initState() {
@@ -80,7 +85,7 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
     for (int i = 0; i < result.documents.length; i++) {
       displayUsers.add(result.documents[i]);
     }
-
+    currentUser = await FirebaseAuth.instance.currentUser();
     setState(() {
       _isLoading = false;
     });
@@ -120,7 +125,7 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                       SizedBox(
                         height: 50,
                       ),
-                      Loading()
+                      Loading(),
                     ],
                   ),
                 )
@@ -148,7 +153,28 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                           displayUsers.length,
                           (index) {
                             return GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                widget.isEmployer
+                                    ? Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              StudentDetailsScreen(
+                                                  userData: displayUsers[index],
+                                                  notSignedIn:
+                                                      widget.notSignedIn,
+                                                  currentUser: currentUser),
+                                        ),
+                                      )
+                                    : Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CompanyDetailsScreen(
+                                                    userData:
+                                                        displayUsers[index],
+                                                    notSignedIn:
+                                                        widget.notSignedIn,
+                                                    currentUser: currentUser)));
+                              },
                               child: Card(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -187,7 +213,8 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                                                 children: [
                                                   Text(
                                                     'Company name: ${displayUsers[index]['company_name']}',
-                                                    overflow: TextOverflow.fade,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                     ),
@@ -195,7 +222,8 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                                                   Divider(),
                                                   Text(
                                                     'Address: ${displayUsers[index]['company_address']}',
-                                                    overflow: TextOverflow.fade,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                     ),
@@ -203,7 +231,8 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                                                   Divider(),
                                                   Text(
                                                     'Office no: ${displayUsers[index]['office_number']}',
-                                                    overflow: TextOverflow.fade,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                     ),
@@ -216,7 +245,8 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                                                 children: <Widget>[
                                                   Text(
                                                     'Name: ${displayUsers[index]['name']}',
-                                                    overflow: TextOverflow.fade,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                     ),
@@ -224,7 +254,8 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                                                   Divider(),
                                                   Text(
                                                     'Course: ${displayUsers[index]['course']}',
-                                                    overflow: TextOverflow.fade,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                     ),
@@ -232,7 +263,8 @@ class _CourseJobScreenState extends State<CourseJobScreen> {
                                                   Divider(),
                                                   Text(
                                                     'Specialisation: ${displayUsers[index]['specialisation']}',
-                                                    overflow: TextOverflow.fade,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                     ),
