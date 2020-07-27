@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class FilterScreen extends StatelessWidget {
   static const routeName = './filterScreen';
   final bool isEmployer;
-  final FirebaseUser currentUser;
+  final DocumentSnapshot currentUser;
 
   FilterScreen(this.isEmployer, this.currentUser);
 

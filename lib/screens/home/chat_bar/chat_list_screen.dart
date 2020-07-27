@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../widgets/loading.dart';
@@ -9,7 +8,7 @@ import '../../../models/chat.dart';
 class ChatListScreen extends StatelessWidget {
   static const routeName = './chatListScreen';
   final bool isEmployer;
-  final FirebaseUser currentUser;
+  final DocumentSnapshot currentUser;
 
   ChatListScreen(this.isEmployer, this.currentUser);
 
@@ -19,13 +18,13 @@ class ChatListScreen extends StatelessWidget {
       stream: isEmployer
           ? Firestore.instance
               .collection('employers')
-              .document(currentUser.uid)
+              .document(currentUser.documentID)
               .collection('chats')
               .orderBy('createdAt')
               .snapshots()
           : Firestore.instance
               .collection('students')
-              .document(currentUser.uid)
+              .document(currentUser.documentID)
               .collection('chats')
               .orderBy('createdAt')
               .snapshots(),
@@ -49,42 +48,41 @@ class ChatListScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Card(
-                  elevation: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Stack(
-                      children: <Widget>[
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundImage: NetworkImage(imageUrl),
-                        ),
-                        Positioned(
-                          top: 15,
-                          left: 100,
-                          child: Text(
-                            snapshots.data.documents[index]['name'],
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+              child: Card(
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(imageUrl),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              snapshots.data.documents[index]['name'],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Positioned(
-                          top: 50,
-                          left: 100,
-                          child: Text(
-                            snapshots.data.documents[index]['text'],
-                            style: TextStyle(
-                              fontSize: 15,
+                            SizedBox(height: 10),
+                            Text(
+                              snapshots.data.documents[index]['text'],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

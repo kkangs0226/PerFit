@@ -6,8 +6,9 @@ import 'chat_bar/chat_list_screen.dart';
 import './filter_bar/filter_screen.dart';
 import './forum_bar/forum_screen.dart';
 import './home_bar/home_screen.dart';
-import './profile_bar/user_profile_screen.dart';
+import 'profile_bar/student_profile_screen.dart';
 import '../../widgets/loading.dart';
+import 'profile_bar/employer_profile_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
@@ -16,9 +17,10 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  bool isEmployer;
+  bool isEmployer = true;
   FirebaseUser currentUser;
   bool _isLoading;
+  DocumentSnapshot userData;
   var _selectedPageIndex = 0;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -40,9 +42,14 @@ class _TabsScreenState extends State<TabsScreen> {
         .get();
     if (result.exists) {
       isEmployer = true;
+      userData = result;
       print('success');
     } else {
       isEmployer = false;
+      userData = await Firestore.instance
+          .collection('students')
+          .document(currentUser.uid)
+          .get();
       print('failure');
     }
     setState(() {
@@ -62,12 +69,14 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, Object>> _pages = [
-      {'page': HomeScreen(isEmployer, currentUser), 'title': 'PerFit!'},
-      {'page': FilterScreen(isEmployer, currentUser), 'title': 'Filter'},
-      {'page': ForumScreen(isEmployer, currentUser), 'title': 'Forum'},
-      {'page': ChatListScreen(isEmployer, currentUser), 'title': 'Chat Lists'},
+      {'page': HomeScreen(isEmployer, userData), 'title': 'PerFit!'},
+      {'page': FilterScreen(isEmployer, userData), 'title': 'Filter'},
+      {'page': ForumScreen(isEmployer, userData), 'title': 'Forum'},
+      {'page': ChatListScreen(isEmployer, userData), 'title': 'Chat Lists'},
       {
-        'page': UserProfileScreen(isEmployer, currentUser),
+        'page': !isEmployer
+            ? StudentProfileScreen(userData)
+            : EmployerProfileScreen(userData),
         'title': 'User Profile'
       },
     ];

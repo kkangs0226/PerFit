@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ForumScreen extends StatelessWidget {
   static const routeName = './forumScreen';
   final bool isEmployer;
-  final FirebaseUser currentUser;
+  final DocumentSnapshot currentUser;
 
   ForumScreen(this.isEmployer, this.currentUser);
 

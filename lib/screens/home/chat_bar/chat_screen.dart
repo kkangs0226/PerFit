@@ -19,10 +19,11 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(
           chat.name,
-          style: Theme.of(context)
-              .textTheme
-              .headline2
-              .copyWith(color: Theme.of(context).accentColor),
+          style: Theme.of(context).textTheme.headline2.copyWith(
+                color: Theme.of(context).accentColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
         ),
         actions: <Widget>[
           CircleAvatar(

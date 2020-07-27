@@ -9,7 +9,7 @@ import 'package:perfit_app/screens/home/home_bar/offer_status_employer_screen.da
 import 'package:perfit_app/screens/home/home_bar/offer_status_student_screen.dart';
 import 'package:perfit_app/screens/home/chat_bar/chat_screen.dart';
 import 'package:perfit_app/screens/home/home_bar/home_screen.dart';
-import 'package:perfit_app/screens/home/profile_bar/user_profile_screen.dart';
+import 'package:perfit_app/screens/home/profile_bar/student_profile_screen.dart';
 import 'package:provider/provider.dart';
 
 import './screens/authenticate/forgot_password_screen.dart';

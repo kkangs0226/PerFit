@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:perfit_app/models/company.dart';
@@ -24,7 +22,7 @@ import '../../../models/chat.dart';
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home_screen';
   final bool isEmployer;
-  final FirebaseUser currentUser;
+  final DocumentSnapshot currentUser;
 
   HomeScreen(this.isEmployer, this.currentUser);
 
