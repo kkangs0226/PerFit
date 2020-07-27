@@ -41,7 +41,7 @@ class CompaniesList with ChangeNotifier {
         industry: 'Banking & Finance',
         joinedDate: '02/02/2020',
         location: '290 Orchard Rd, Singapore 238859',
-        isFavourite: true,
+        isFavourite: false,
         tempJob: {
           'title': 'Software Engineer Intern',
           'duration': 'July 2020 - December 2020',
@@ -55,7 +55,7 @@ class CompaniesList with ChangeNotifier {
         founderName: 'Kang Su Min',
         industry: 'Civil Engineering',
         joinedDate: '21/08/2020',
-        isFavourite: true,
+        isFavourite: false,
         tempJob: {
           'title': 'Software Engineer Intern',
           'duration': 'March 2021 - December 2021',
@@ -69,7 +69,7 @@ class CompaniesList with ChangeNotifier {
         founderName: 'Ming Kang',
         industry: 'Fishing',
         joinedDate: '06/03/2020',
-        isFavourite: true,
+        isFavourite: false,
         tempJob: {
           'title': 'Annoying Intern',
           'duration': 'November 2051 - December 2051',

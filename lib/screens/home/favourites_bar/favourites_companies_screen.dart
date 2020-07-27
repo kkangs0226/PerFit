@@ -10,7 +10,13 @@ class FavouritesCompaniesScreen extends StatelessWidget {
         title: Text('Favourited Companies'),
       ),
       body: Center(
-        child: Text('Your Favourites'),
+        child: Text(
+          'Your Favourites',
+          style: Theme.of(context)
+              .textTheme
+              .headline1
+              .copyWith(color: Colors.white),
+        ),
       ),
     );
   }
