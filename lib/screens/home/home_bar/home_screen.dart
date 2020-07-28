@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:path/path.dart';
 import 'package:perfit_app/models/company.dart';
 import 'package:perfit_app/screens/company_student_screens/company_details_screen.dart';
 import 'package:perfit_app/screens/company_student_screens/student_details_screen.dart';
