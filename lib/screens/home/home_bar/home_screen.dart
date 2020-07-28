@@ -455,15 +455,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   } else {
-                    return isStudent
-                        ? _companyListBuilder(companiesList.favouriteCompanies)
-                        : _studentListBuilder(studentsList.LIST_STUDENTS);
+                    return _companyListBuilder(
+                        companiesList.favouriteCompanies);
                   }
                 },
               )
-            : isStudent
-                ? _companyListBuilder(companiesList.favouriteCompanies)
-                : _studentListBuilder(studentsList.LIST_STUDENTS),
+            : _companyListBuilder(companiesList.favouriteCompanies),
       ],
     );
   }

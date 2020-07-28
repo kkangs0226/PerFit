@@ -17,53 +17,47 @@ class CompanyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Company company = Provider.of<Company>(context);
 
-    return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(
-        CompanyDetailsScreen.routeName, arguments: company.id,
-        //arguments: companyId,
-      ),
-      child: Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 17,
-            ),
-            padding: EdgeInsets.all(3),
-            height: 80,
-            width: 80,
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 17,
+          ),
+          padding: EdgeInsets.all(3),
+          height: 80,
+          width: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            //color: Theme.of(context).primaryColorDark,
+            color: Colors.black54,
+          ),
+          child: Container(
+            padding: EdgeInsets.all(13),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              //color: Theme.of(context).primaryColorDark,
-              color: Colors.black54,
+              color: Colors.white,
             ),
-            child: Container(
-              padding: EdgeInsets.all(13),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: Image.asset(
-                company.logoURL,
-                fit: BoxFit.contain,
-              ),
+            child: Image.asset(
+              company.logoURL,
+              fit: BoxFit.contain,
             ),
           ),
-          Container(
-            height: 30,
-            alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 10,
-            ),
-            child: Text(
-              company.name,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.headline3,
-            ),
+        ),
+        Container(
+          height: 30,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(
+            vertical: 5,
+            horizontal: 10,
           ),
-        ],
-      ),
+          child: Text(
+            company.name,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        ),
+      ],
     );
   }
 }
