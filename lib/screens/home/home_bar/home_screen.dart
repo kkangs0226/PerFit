@@ -349,7 +349,6 @@ class _HomeScreenState extends State<HomeScreen> {
     //MediaQueryData mediaQuery = MediaQuery.of(context);
 
     final companiesList = Provider.of<CompaniesList>(context);
-    final studentsList = Provider.of<StudentsList>(context);
     final offers = Provider.of<Offers>(context);
     return //LayoutBuilder(builder: (ctx, constraints) {
         ListView(

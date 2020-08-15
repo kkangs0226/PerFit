@@ -27,6 +27,7 @@ class _TabsScreenState extends State<TabsScreen> {
   FirebaseUser currentUser;
   bool _isLoading;
   DocumentSnapshot userData;
+  QuerySnapshot searchList;
   var _selectedPageIndex = 0;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -38,6 +39,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   Future<void> _checkIfEmployer() async {
     DocumentSnapshot result;
+    QuerySnapshot search;
     setState(() {
       _isLoading = true;
     });
@@ -47,9 +49,11 @@ class _TabsScreenState extends State<TabsScreen> {
           .collection('employers')
           .document(currentUser.uid)
           .get();
+      search = await Firestore.instance.collection('students').getDocuments();
       if (result.exists) {
         isEmployer = true;
         userData = result;
+        searchList = search;
         print('success');
       } else {
         isEmployer = false;
@@ -57,6 +61,9 @@ class _TabsScreenState extends State<TabsScreen> {
             .collection('students')
             .document(currentUser.uid)
             .get();
+        search =
+            await Firestore.instance.collection('employers').getDocuments();
+        searchList = search;
         print('failure');
       }
     }
@@ -122,12 +129,15 @@ class _TabsScreenState extends State<TabsScreen> {
     final PreferredSizeWidget mainAppBar = AppBar(
       automaticallyImplyLeading: false,
       actions: <Widget>[
-        /*IconButton(
+        IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              showSearch(context: context, delegate: DataSearch());
+              print(searchList.documents.length);
+              print(isEmployer);
+              showSearch(
+                  context: context,
+                  delegate: DataSearch(searchList, isEmployer));
             }),
-            */
         PopupMenuButton(
             onSelected: _onSelect,
             itemBuilder: (ctx) {
